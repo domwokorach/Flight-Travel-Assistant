@@ -56,6 +56,7 @@ export function useFlightTracking(flightNumber: string | null, enabled = true) {
     intervalMs,
     enabled: Boolean(flightNumber) && enabled,
     staleAfterMs: intervalMs * 4,
+    persistKey: flightNumber ? `flight-journey:${flightNumber}` : undefined,
   })
 
   return { flight: data?.flight ?? null, isLive: data?.isLive ?? false, ...rest }

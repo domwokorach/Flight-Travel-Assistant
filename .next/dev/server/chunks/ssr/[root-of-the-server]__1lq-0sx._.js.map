@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 46, "column": 0}, "map": {"version":3,"sources":["file:///Users/dominicolanya/Developer/flight-travel-assistant/src/components/theme-provider.jsx"],"sourcesContent":["'use client'\n\nimport { ThemeProvider as NextThemesProvider } from 'next-themes'\n\nexport function ThemeProvider({ children, ...props }) {\n  return (\n    <NextThemesProvider attribute=\"class\" defaultTheme=\"dark\" enableSystem {...props}>\n      {children}\n    </NextThemesProvider>\n  )\n}\n"],"names":["ThemeProvider","children","props","attribute","defaultTheme","enableSystem"],"mappings":";;;;;AAEA;AAFA;;;AAIO,SAASA,cAAc,EAAEC,QAAQ,EAAE,GAAGC,OAAO;IAClD,qBACE,8OAAC,iKAAkB;QAACC,WAAU;QAAQC,cAAa;QAAOC,YAAY;QAAE,GAAGH,KAAK;kBAC7ED;;;;;;AAGP"}}]
-}

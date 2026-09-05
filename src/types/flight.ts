@@ -66,7 +66,7 @@ export interface Flight {
 }
 
 export interface FlightSearchResult {
-  kind: 'flight' | 'airline' | 'airport' | 'route'
+  kind: 'flight' | 'airline' | 'airport' | 'city' | 'route'
   label: string
   sublabel?: string
   value: string

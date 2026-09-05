@@ -1,5 +1,5 @@
 import type { DirectionsRoute } from '@/types/transport'
-import { getDirections } from '@/lib/providers/directions/osrm'
+import { getDirectionsProvider } from '@/lib/providers/directions'
 import { findAirport } from '@/data/airportDirectory'
 
 export async function getDirectionsToAirport(
@@ -9,7 +9,7 @@ export async function getDirectionsToAirport(
 ): Promise<DirectionsRoute | null> {
   const airport = findAirport(airportIata)
   if (!airport) return null
-  return getDirections(from, { lat: airport.latitude, lon: airport.longitude }, mode)
+  return getDirectionsProvider().getDirections(from, { lat: airport.latitude, lon: airport.longitude }, mode)
 }
 
 export async function getDirectionsBetweenAirports(
@@ -20,5 +20,5 @@ export async function getDirectionsBetweenAirports(
   const from = findAirport(fromIata)
   const to = findAirport(toIata)
   if (!from || !to) return null
-  return getDirections({ lat: from.latitude, lon: from.longitude }, { lat: to.latitude, lon: to.longitude }, mode)
+  return getDirectionsProvider().getDirections({ lat: from.latitude, lon: from.longitude }, { lat: to.latitude, lon: to.longitude }, mode)
 }

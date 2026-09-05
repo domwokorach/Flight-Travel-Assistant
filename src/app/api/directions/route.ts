@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getDirectionsToAirport, getDirectionsBetweenAirports } from '@/services/directionsService'
 import { apiErrorResponse } from '@/lib/apiError'
+import { checkRateLimit } from '@/lib/rateLimit'
 import type { DirectionsRoute } from '@/types/transport'
 
 export async function GET(request: NextRequest) {
@@ -14,6 +15,8 @@ export async function GET(request: NextRequest) {
   if (!to) return NextResponse.json({ error: 'to (airport IATA) is required' }, { status: 400 })
 
   try {
+    checkRateLimit(request, 'directions', { limit: 30, windowMs: 60_000 })
+
     const route =
       lat && lon
         ? await getDirectionsToAirport({ lat: Number(lat), lon: Number(lon) }, to, mode)

@@ -42,5 +42,5 @@ npm run preview
 
 ## API integration structure
 
-Mock data is isolated in `src/data/mockData.js`, allowing replacement with live flight-status, weather, airport, and transport services without changing the presentation components.
+Demo/mock flight data lives in `src/lib/providers/flight/mock.ts`, selected automatically by `getFlightProvider()` (`src/lib/providers/flight/index.ts`) whenever `AERODATABOX_API_KEY` is unset or `ENABLE_MOCK_DATA=true` — swapping in the live `AeroDataBoxProvider` needs no changes to presentation components. Weather, airport, and transport data come from real (keyless) services: Open-Meteo, a static airport directory, and TfL/OSRM.
 # Flight-Travel-Assistant
