@@ -1,48 +1,36 @@
 import React from 'react'
-import Card from '@mui/material/Card'
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
-import NavigationIcon from '@mui/icons-material/Navigation'
-import MapIcon from '@mui/icons-material/Map'
+import { Navigation, Map } from 'lucide-react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export default function DirectionsPanel() {
   return (
-    <Card sx={{ overflow: 'hidden', bgcolor: '#0B1220', color: '#fff' }}>
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '1fr 360px' } }}>
-        <Box sx={{ p: { xs: 3, sm: 4 } }}>
-          <Typography sx={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#7DD3FC' }}>
-            Door to gate
-          </Typography>
-          <Typography variant="h5" sx={{ mt: 1, color: '#fff' }}>Keep the journey moving</Typography>
-          <Typography sx={{ mt: 1, maxWidth: 480, fontSize: 14, fontWeight: 500, lineHeight: 1.6, color: '#CBD5E1' }}>
+    <Card className="overflow-hidden bg-[#0B1220] p-0 text-white">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px]">
+        <div className="p-6 sm:p-8">
+          <p className="text-xs font-bold tracking-[0.1em] text-[#7DD3FC] uppercase">Door to gate</p>
+          <h3 className="mt-2 font-heading text-2xl font-bold text-white">Keep the journey moving</h3>
+          <p className="mt-2 max-w-[480px] text-sm leading-relaxed font-medium text-[#CBD5E1]">
             Open step-by-step airport directions, check terminal transfers, or continue from JFK with the fastest available transport option.
-          </Typography>
-          <Stack direction="row" flexWrap="wrap" spacing={1.5} sx={{ mt: 2.5, rowGap: 1.5 }}>
-            <Button variant="contained" startIcon={<NavigationIcon />} sx={{ bgcolor: '#0EA5E9', '&:hover': { bgcolor: '#38BDF8' } }}>
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button className="bg-[#0EA5E9] hover:bg-[#38BDF8]">
+              <Navigation className="size-4" />
               Get directions
             </Button>
-            <Button variant="outlined" startIcon={<MapIcon />} sx={{ borderColor: 'rgba(255,255,255,0.2)', color: '#fff', bgcolor: 'rgba(255,255,255,0.05)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.3)' } }}>
+            <Button variant="outline" className="border-white/20 bg-white/5 text-white hover:border-white/30 hover:bg-white/10">
+              <Map className="size-4" />
               View airport map
             </Button>
-          </Stack>
-        </Box>
-        <Box
-          sx={{
-            position: 'relative',
-            minHeight: 176,
-            borderTop: { xs: '1px solid rgba(255,255,255,0.1)', lg: 'none' },
-            borderLeft: { lg: '1px solid rgba(255,255,255,0.1)' },
-            background: 'radial-gradient(circle at 20% 30%, rgba(14,165,233,.28), transparent 32%), radial-gradient(circle at 75% 70%, rgba(59,130,246,.22), transparent 35%)',
-          }}
-        >
-          <Box sx={{ position: 'absolute', inset: 24, borderRadius: 5, border: '1px solid rgba(255,255,255,0.1)' }}>
-            <Box sx={{ position: 'absolute', left: '18%', top: '62%', width: 12, height: 12, borderRadius: '50%', bgcolor: '#fff', boxShadow: '0 0 0 8px rgba(56,189,248,0.2)' }} />
-            <Box sx={{ position: 'absolute', right: '18%', top: '28%', width: 12, height: 12, borderRadius: '50%', bgcolor: '#38BDF8', boxShadow: '0 0 0 8px rgba(56,189,248,0.2)' }} />
-          </Box>
-        </Box>
-      </Box>
+          </div>
+        </div>
+        <div className="relative min-h-44 border-t border-white/10 bg-[radial-gradient(circle_at_20%_30%,rgba(14,165,233,.28),transparent_32%),radial-gradient(circle_at_75%_70%,rgba(59,130,246,.22),transparent_35%)] lg:border-t-0 lg:border-l">
+          <div className="absolute inset-6 rounded-3xl border border-white/10">
+            <div className="absolute top-[62%] left-[18%] size-3 rounded-full bg-white shadow-[0_0_0_8px_rgba(56,189,248,0.2)]" />
+            <div className="absolute top-[28%] right-[18%] size-3 rounded-full bg-[#38BDF8] shadow-[0_0_0_8px_rgba(56,189,248,0.2)]" />
+          </div>
+        </div>
+      </div>
     </Card>
   )
 }

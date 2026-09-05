@@ -1,27 +1,26 @@
 import React from 'react'
-import Card from '@mui/material/Card'
-import Box from '@mui/material/Box'
-import Skeleton from '@mui/material/Skeleton'
+import { Card } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export function SkeletonFlightCard() {
   return (
-    <Card sx={{ p: 3 }} aria-label="Loading flight data">
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Box sx={{ display: 'flex', gap: 1.5 }}>
-          <Skeleton variant="rounded" width={48} height={48} sx={{ borderRadius: 3 }} />
-          <Box>
-            <Skeleton width={140} height={20} />
-            <Skeleton width={80} height={16} sx={{ mt: 1 }} />
-          </Box>
-        </Box>
-        <Skeleton variant="rounded" width={80} height={28} sx={{ borderRadius: 999 }} />
-      </Box>
-      <Box sx={{ mt: 4, display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: 2.5 }}>
-        <Skeleton variant="rounded" height={48} />
-        <Skeleton width={40} height={8} />
-        <Skeleton variant="rounded" height={48} />
-      </Box>
-      <Skeleton variant="rounded" height={96} sx={{ mt: 3.5, borderRadius: 4 }} />
+    <Card aria-label="Loading flight data">
+      <div className="flex justify-between">
+        <div className="flex gap-3">
+          <Skeleton className="size-12 rounded-xl" />
+          <div>
+            <Skeleton className="h-5 w-35" />
+            <Skeleton className="mt-2 h-4 w-20" />
+          </div>
+        </div>
+        <Skeleton className="h-7 w-20 rounded-full" />
+      </div>
+      <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-2.5">
+        <Skeleton className="h-12 rounded-xl" />
+        <Skeleton className="h-2 w-10" />
+        <Skeleton className="h-12 rounded-xl" />
+      </div>
+      <Skeleton className="mt-3.5 h-24 rounded-2xl" />
     </Card>
   )
 }

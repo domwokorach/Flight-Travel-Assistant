@@ -1,48 +1,47 @@
 import React from 'react'
-import Card from '@mui/material/Card'
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import ApartmentIcon from '@mui/icons-material/Apartment'
-import WorkOutlineIcon from '@mui/icons-material/WorkOutline'
-import VerifiedUserIcon from '@mui/icons-material/VerifiedUser'
-import FaceRetouchingNaturalIcon from '@mui/icons-material/FaceRetouchingNatural'
-import LocalCafeIcon from '@mui/icons-material/LocalCafe'
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag'
-import RestaurantIcon from '@mui/icons-material/Restaurant'
-import LuggageIcon from '@mui/icons-material/Luggage'
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
-import WifiIcon from '@mui/icons-material/Wifi'
-import BatteryChargingFullIcon from '@mui/icons-material/BatteryChargingFull'
-import PlaceIcon from '@mui/icons-material/Place'
+import {
+  Building2,
+  Briefcase,
+  ShieldCheck,
+  ScanFace,
+  Coffee,
+  ShoppingBag,
+  UtensilsCrossed,
+  Luggage,
+  HelpCircle,
+  Wifi,
+  BatteryCharging,
+  MapPin,
+} from 'lucide-react'
+import { Card } from '@/components/ui/card'
 
 const icons = {
-  terminal: ApartmentIcon,
-  checkin: WorkOutlineIcon,
-  security: VerifiedUserIcon,
-  passport: FaceRetouchingNaturalIcon,
-  lounge: LocalCafeIcon,
-  shop: ShoppingBagIcon,
-  food: RestaurantIcon,
-  baggage: LuggageIcon,
-  lost: HelpOutlineIcon,
-  wifi: WifiIcon,
-  charge: BatteryChargingFullIcon,
+  terminal: Building2,
+  checkin: Briefcase,
+  security: ShieldCheck,
+  passport: ScanFace,
+  lounge: Coffee,
+  shop: ShoppingBag,
+  food: UtensilsCrossed,
+  baggage: Luggage,
+  lost: HelpCircle,
+  wifi: Wifi,
+  charge: BatteryCharging,
 }
 
 export default function AirportServiceCard({ title, detail, icon }) {
-  const Icon = icons[icon] || PlaceIcon
+  const Icon = icons[icon] || MapPin
   return (
-    <Card sx={{ p: 2.5 }}>
-      <Stack direction="row" spacing={1.5}>
-        <Box sx={{ width: 40, height: 40, borderRadius: 3, bgcolor: 'action.hover', color: 'text.secondary', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
-          <Icon fontSize="small" />
-        </Box>
-        <Box>
-          <Typography sx={{ fontWeight: 800, fontSize: 14 }}>{title}</Typography>
-          <Typography sx={{ mt: 0.5, fontSize: 12, fontWeight: 600, lineHeight: 1.6, color: 'text.secondary' }}>{detail}</Typography>
-        </Box>
-      </Stack>
+    <Card className="p-5">
+      <div className="flex gap-3">
+        <div className="grid size-10 shrink-0 place-items-center rounded-2xl bg-accent text-muted-foreground">
+          <Icon className="size-4.5" />
+        </div>
+        <div>
+          <p className="text-sm font-extrabold">{title}</p>
+          <p className="mt-1 text-xs leading-relaxed font-semibold text-muted-foreground">{detail}</p>
+        </div>
+      </div>
     </Card>
   )
 }

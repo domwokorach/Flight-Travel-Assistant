@@ -1,32 +1,21 @@
 import React from 'react'
-import Box from '@mui/material/Box'
+import { cn } from '@/lib/utils'
 import SplitFlapChar from './SplitFlapChar'
-import { fontMono } from '../../theme'
 
 /**
  * Airport split-flap display text. Uppercase, monospaced, tabular — reserved
  * for board moments (flight numbers, airport codes, times, gates, status),
  * never for body copy.
  */
-export default function SplitFlapText({ value, sx, charSx }) {
+export default function SplitFlapText({ value, className, charClassName, style }) {
   const chars = String(value ?? '').toUpperCase().split('')
   return (
-    <Box
-      component="span"
-      role="text"
-      aria-label={String(value ?? '')}
-      sx={{
-        display: 'inline-flex',
-        fontFamily: fontMono,
-        fontVariantNumeric: 'tabular-nums',
-        ...sx,
-      }}
-    >
-      <Box component="span" aria-hidden="true" sx={{ display: 'inline-flex' }}>
+    <span role="text" aria-label={String(value ?? '')} style={style} className={cn('inline-flex font-mono tabular-nums', className)}>
+      <span aria-hidden="true" className="inline-flex">
         {chars.map((ch, i) => (
-          <SplitFlapChar key={i} value={ch} sx={charSx} />
+          <SplitFlapChar key={i} value={ch} className={charClassName} />
         ))}
-      </Box>
-    </Box>
+      </span>
+    </span>
   )
 }

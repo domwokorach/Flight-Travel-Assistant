@@ -1,6 +1,5 @@
 import React from 'react'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
+import { cn } from '@/lib/utils'
 import SplitFlapText from './SplitFlapText'
 
 const statusTone = {
@@ -35,112 +34,56 @@ function boardRow(flight) {
   }
 }
 
-const gridTemplate = { xs: '64px 84px 1fr 56px 1fr' }
+const rowGrid = 'grid grid-cols-[64px_84px_1fr_56px_1fr] md:grid-cols-[72px_92px_1fr_64px_1fr] min-w-[560px] items-center gap-3'
 
 function BoardRow({ row }) {
   return (
-    <Box
-      sx={{
-        display: 'grid',
-        gridTemplateColumns: gridTemplate,
-        alignItems: 'center',
-        gap: 1.5,
-        minWidth: 560,
-        px: { xs: 2, md: 3 },
-        py: 1.5,
-        borderBottom: '1px solid rgba(255,255,255,0.1)',
-        '&:last-of-type': { borderBottom: 'none' },
-      }}
-    >
-      <SplitFlapText value={row.time} sx={{ fontSize: { xs: 16, md: 18 }, color: 'board.text' }} />
-      <Box>
-        <SplitFlapText value={row.flightNumber} sx={{ fontSize: { xs: 14, md: 16 }, color: 'board.text' }} />
-        <Typography noWrap sx={{ mt: 0.25, fontSize: 10, fontWeight: 500, color: 'board.muted' }}>
-          {row.airline}
-        </Typography>
-      </Box>
-      <Box sx={{ minWidth: 0 }}>
-        <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
-          <SplitFlapText value={row.code} sx={{ fontSize: { xs: 16, md: 18 }, color: 'board.text' }} />
-          {row.estimated ? (
-            <Typography
-              component="span"
-              sx={{ fontSize: 12, color: '#FBBF24', fontFamily: 'IBM Plex Mono, monospace' }}
-            >
-              → {row.estimated}
-            </Typography>
-          ) : null}
-        </Box>
-        <Typography noWrap sx={{ mt: 0.25, fontSize: 10, fontWeight: 500, color: 'board.muted' }}>
+    <div className={cn(rowGrid, 'border-b border-white/10 px-4 py-3 last-of-type:border-b-0 md:px-6')}>
+      <SplitFlapText value={row.time} className="text-base text-board-text md:text-lg" />
+      <div>
+        <SplitFlapText value={row.flightNumber} className="text-sm text-board-text md:text-base" />
+        <p className="mt-0.5 truncate text-[10px] font-medium text-board-muted">{row.airline}</p>
+      </div>
+      <div className="min-w-0">
+        <div className="flex items-baseline gap-2">
+          <SplitFlapText value={row.code} className="text-base text-board-text md:text-lg" />
+          {row.estimated ? <span className="font-mono text-xs text-[#FBBF24]">→ {row.estimated}</span> : null}
+        </div>
+        <p className="mt-0.5 truncate text-[10px] font-medium text-board-muted">
           {row.city} · T{row.terminal}
-        </Typography>
-      </Box>
-      <SplitFlapText value={row.gate} sx={{ fontSize: { xs: 16, md: 18 }, color: 'board.text' }} />
-      <SplitFlapText
-        value={row.status}
-        sx={{ fontSize: { xs: 12, md: 14 }, color: statusTone[row.status] || 'board.text' }}
-      />
-    </Box>
+        </p>
+      </div>
+      <SplitFlapText value={row.gate} className="text-base text-board-text md:text-lg" />
+      <SplitFlapText value={row.status} className="text-xs md:text-sm" charClassName="" style={{ color: statusTone[row.status] }} />
+    </div>
   )
 }
 
-export default function DepartureBoard({ heading = 'DEPARTURES', flights, sx }) {
+export default function DepartureBoard({ heading = 'DEPARTURES', flights, className }) {
   const rows = flights.map(boardRow)
 
   return (
-    <Box
-      sx={{
-        overflow: 'hidden',
-        borderRadius: 5,
-        bgcolor: 'board.bg',
-        boxShadow: '0 16px 50px rgba(18,20,23,0.35)',
-        ...sx,
-      }}
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
-          bgcolor: 'board.alt',
-          px: { xs: 2, md: 3 },
-          py: 1.5,
-        }}
-      >
-        <SplitFlapText value={heading} sx={{ fontSize: { xs: 14, md: 16 }, color: 'board.text' }} />
-        <Typography sx={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'board.muted' }}>
-          Heathrow · T5
-        </Typography>
-      </Box>
-      <Box sx={{ overflowX: 'auto' }}>
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: gridTemplate,
-            gap: 1.5,
-            minWidth: 560,
-            borderBottom: '1px solid rgba(255,255,255,0.1)',
-            px: { xs: 2, md: 3 },
-            py: 1,
-          }}
-        >
-          {['Time', 'Flight', heading === 'ARRIVALS' ? 'From' : 'Destination', 'Gate', 'Status'].map(label => (
-            <Typography key={label} sx={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'board.muted' }}>
+    <div className={cn('overflow-hidden rounded-3xl bg-board-bg shadow-[0_16px_50px_rgba(18,20,23,0.35)]', className)}>
+      <div className="flex items-center justify-between border-b border-white/10 bg-board-alt px-4 py-3 md:px-6">
+        <SplitFlapText value={heading} className="text-sm text-board-text md:text-base" />
+        <p className="text-[10px] font-semibold tracking-[0.08em] text-board-muted uppercase">Heathrow · T5</p>
+      </div>
+      <div className="overflow-x-auto">
+        <div className={cn(rowGrid, 'border-b border-white/10 px-4 py-2 md:px-6')}>
+          {['Time', 'Flight', heading === 'ARRIVALS' ? 'From' : 'Destination', 'Gate', 'Status'].map((label) => (
+            <p key={label} className="text-[10px] font-bold tracking-[0.08em] text-board-muted uppercase">
               {label}
-            </Typography>
+            </p>
           ))}
-        </Box>
+        </div>
         <div>
           {rows.length ? (
-            rows.map(row => <BoardRow key={row.id} row={row} />)
+            rows.map((row) => <BoardRow key={row.id} row={row} />)
           ) : (
-            <Typography sx={{ minWidth: 560, px: 3, py: 4, textAlign: 'center', fontSize: 14, fontWeight: 500, color: 'board.muted' }}>
-              No flights to display.
-            </Typography>
+            <p className="min-w-[560px] px-6 py-4 text-center text-sm font-medium text-board-muted">No flights to display.</p>
           )}
         </div>
-      </Box>
-    </Box>
+      </div>
+    </div>
   )
 }

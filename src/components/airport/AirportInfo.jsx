@@ -1,11 +1,5 @@
 import React from 'react'
-import Accordion from '@mui/material/Accordion'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
-import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 import { SectionHeading } from '../common/SectionHeading'
 import YourJourney from './YourJourney'
 import AirportServiceCard from './AirportServiceCard'
@@ -17,46 +11,40 @@ const categories = [
 ]
 
 export default function AirportInfo({ services }) {
-  const byIcon = Object.fromEntries(services.map(s => [s.icon, s]))
+  const byIcon = Object.fromEntries(services.map((s) => [s.icon, s]))
+  const visibleValues = categories
+    .filter((category) => category.icons.some((icon) => byIcon[icon]))
+    .map((category) => category.value)
 
   return (
-    <Box component="section" id="airport" sx={{ scrollMarginTop: 96 }}>
+    <section id="airport" className="scroll-mt-24">
       <SectionHeading eyebrow="At the airport" title="Heathrow Terminal 5" />
       <YourJourney />
-      <Stack spacing={1.5}>
-        {categories.map(category => {
-          const items = category.icons.map(icon => byIcon[icon]).filter(Boolean)
+      <div className="flex flex-col gap-3">
+        {categories.map((category) => {
+          const items = category.icons.map((icon) => byIcon[icon]).filter(Boolean)
           if (!items.length) return null
           return (
-            <Accordion
-              key={category.value}
-              defaultExpanded
-              disableGutters
-              sx={{
-                borderRadius: 5,
-                border: '1px solid',
-                borderColor: 'divider',
-                '&:before': { display: 'none' },
-                '&.Mui-expanded': { margin: 0 },
-              }}
-            >
-              <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ px: 2.5 }}>
-                <Typography sx={{ fontWeight: 800, fontSize: 14 }}>
-                  {category.title}
-                  <Typography component="span" sx={{ ml: 1, fontSize: 12, fontWeight: 600, color: 'text.secondary' }}>
-                    {items.length} services
-                  </Typography>
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails sx={{ px: 2.5, pb: 2.5 }}>
-                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', xl: 'repeat(3, 1fr)' }, gap: 1.5 }}>
-                  {items.map(service => <AirportServiceCard key={service.title} {...service} />)}
-                </Box>
-              </AccordionDetails>
+            <Accordion key={category.value} type="multiple" defaultValue={visibleValues} className="rounded-3xl border border-border px-5">
+              <AccordionItem value={category.value} className="border-b-0">
+                <AccordionTrigger>
+                  <span>
+                    {category.title}
+                    <span className="ml-2 text-xs font-semibold text-muted-foreground">{items.length} services</span>
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                    {items.map((service) => (
+                      <AirportServiceCard key={service.title} {...service} />
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
             </Accordion>
           )
         })}
-      </Stack>
-    </Box>
+      </div>
+    </section>
   )
 }

@@ -1,9 +1,7 @@
 import React from 'react'
-import Card from '@mui/material/Card'
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
+import { BellRing } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Card } from '@/components/ui/card'
 
 const stages = [
   { time: '30 min', label: 'Gate announced', dot: 'rgba(20,24,31,0.35)', min: 20 },
@@ -14,56 +12,37 @@ const stages = [
 ]
 
 export default function AlertEscalation({ countdown }) {
-  const activeIndex = countdown ? stages.findIndex(s => countdown.minutes > s.min) : -1
+  const activeIndex = countdown ? stages.findIndex((s) => countdown.minutes > s.min) : -1
 
   return (
-    <Card sx={{ p: { xs: 2.5, sm: 3 } }}>
-      <Stack direction="row" spacing={1.5} alignItems="center">
-        <Box sx={{ width: 40, height: 40, borderRadius: 3, bgcolor: '#FDECDD', color: '#B4530A', display: 'grid', placeItems: 'center' }}>
-          <NotificationsActiveIcon fontSize="small" />
-        </Box>
-        <Box>
-          <Typography variant="overline" sx={{ fontSize: 11, color: 'text.secondary' }}>Gate alert logic</Typography>
-          <Typography sx={{ fontWeight: 800 }}>Escalates as departure approaches</Typography>
-        </Box>
-      </Stack>
-      <Stack spacing={1} sx={{ mt: 2.5 }}>
+    <Card className="p-5 sm:p-6">
+      <div className="flex items-center gap-3">
+        <div className="grid size-10 shrink-0 place-items-center rounded-2xl bg-[#FDECDD] text-[#B4530A]">
+          <BellRing className="size-4.5" />
+        </div>
+        <div>
+          <p className="text-[11px] font-bold text-muted-foreground">Gate alert logic</p>
+          <p className="font-extrabold">Escalates as departure approaches</p>
+        </div>
+      </div>
+      <div className="mt-6 flex flex-col gap-1">
         {stages.map((stage, i) => {
           const active = i === activeIndex
           return (
-            <Box
+            <div
               key={stage.time}
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: '48px 12px 1fr',
-                alignItems: 'center',
-                gap: 1.5,
-                borderRadius: 3,
-                px: 1,
-                py: 0.5,
-                bgcolor: active ? '#FDECDD' : 'transparent',
-              }}
+              className={cn('grid grid-cols-[48px_12px_1fr] items-center gap-3 rounded-2xl px-2 py-1', active && 'bg-[#FDECDD]')}
             >
-              <Typography sx={{ fontSize: 12, fontWeight: 800, color: 'text.secondary' }}>{stage.time}</Typography>
-              <Box
-                sx={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: '50%',
-                  bgcolor: stage.dot,
-                  ...(active && {
-                    animation: 'escalationPulse 1.6s ease-in-out infinite',
-                    '@keyframes escalationPulse': { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.4 } },
-                  }),
-                }}
+              <p className="text-xs font-extrabold text-muted-foreground">{stage.time}</p>
+              <span
+                className={cn('size-2.5 rounded-full', active && 'motion-safe:animate-[status-pulse_1.6s_ease-in-out_infinite]')}
+                style={{ backgroundColor: stage.dot }}
               />
-              <Typography sx={{ fontSize: 14, fontWeight: 700, color: active ? '#B4530A' : 'text.primary' }}>
-                {stage.label}
-              </Typography>
-            </Box>
+              <p className={cn('text-sm font-bold', active ? 'text-[#B4530A]' : 'text-foreground')}>{stage.label}</p>
+            </div>
           )
         })}
-      </Stack>
+      </div>
     </Card>
   )
 }

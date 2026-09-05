@@ -1,61 +1,52 @@
 import React, { useState } from 'react'
-import Drawer from '@mui/material/Drawer'
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
-import List from '@mui/material/List'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemText from '@mui/material/ListItemText'
-import MenuIcon from '@mui/icons-material/Menu'
-import CloseIcon from '@mui/icons-material/Close'
-import FlightIcon from '@mui/icons-material/Flight'
+import { Menu, X, Plane } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Sheet, SheetContent, SheetTitle, SheetClose } from '@/components/ui/sheet'
 
 export default function MobileNavigation({ items }) {
   const [open, setOpen] = useState(false)
 
   return (
     <>
-      <IconButton
+      <Button
+        variant="ghost"
+        size="icon"
         aria-label="Open navigation"
         onClick={() => setOpen(true)}
-        sx={{ display: { xs: 'inline-flex', md: 'none' }, color: 'rgba(255,255,255,0.85)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}
+        className="text-white/85 hover:bg-white/10 md:hidden"
       >
-        <MenuIcon />
-      </IconButton>
-      <Drawer
-        anchor="right"
-        open={open}
-        onClose={() => setOpen(false)}
-        PaperProps={{ sx: { bgcolor: '#0F172A', color: '#fff', width: 280, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } }}
-      >
-        <Box sx={{ p: 2.5 }}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Stack direction="row" spacing={1.5} alignItems="center">
-              <Box sx={{ width: 32, height: 32, borderRadius: 3, bgcolor: '#38BDF8', display: 'grid', placeItems: 'center' }}>
-                <FlightIcon sx={{ fontSize: 16, transform: 'rotate(-12deg)' }} />
-              </Box>
-              <Typography sx={{ fontWeight: 800 }}>FlightPath</Typography>
-            </Stack>
-            <IconButton aria-label="Close navigation" onClick={() => setOpen(false)} sx={{ color: 'rgba(255,255,255,0.8)' }}>
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </Stack>
-        </Box>
-        <List component="nav" aria-label="Mobile navigation" sx={{ px: 1 }}>
-          {items.map(([label, href]) => (
-            <ListItemButton
-              key={href}
-              component="a"
-              href={href}
-              onClick={() => setOpen(false)}
-              sx={{ borderRadius: 3, mx: 1, minHeight: 44, '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}
-            >
-              <ListItemText primaryTypographyProps={{ sx: { fontWeight: 700, fontSize: 14 } }}>{label}</ListItemText>
-            </ListItemButton>
-          ))}
-        </List>
-      </Drawer>
+        <Menu className="size-5" />
+      </Button>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent side="right" showCloseButton={false} className="w-70 max-w-[80vw] rounded-none border-l-0 bg-[#0F172A] p-0 text-white">
+          <SheetTitle className="sr-only">Mobile navigation</SheetTitle>
+          <div className="flex items-center justify-between p-5">
+            <div className="flex items-center gap-3">
+              <div className="grid size-8 place-items-center rounded-xl bg-[#38BDF8]">
+                <Plane className="size-4 -rotate-12 text-[#0F172A]" />
+              </div>
+              <p className="font-extrabold">FlightPath</p>
+            </div>
+            <SheetClose asChild>
+              <Button variant="ghost" size="icon" aria-label="Close navigation" className="text-white/80 hover:bg-white/10">
+                <X className="size-4.5" />
+              </Button>
+            </SheetClose>
+          </div>
+          <nav aria-label="Mobile navigation" className="flex flex-col gap-1 px-3.5">
+            {items.map(([label, href]) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setOpen(false)}
+                className="min-h-11 rounded-2xl px-3.5 py-3 text-sm font-bold hover:bg-white/10"
+              >
+                {label}
+              </a>
+            ))}
+          </nav>
+        </SheetContent>
+      </Sheet>
     </>
   )
 }

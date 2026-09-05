@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
-import Card from '@mui/material/Card'
-import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
-import Alert from '@mui/material/Alert'
-import AlertTitle from '@mui/material/AlertTitle'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import RefreshIcon from '@mui/icons-material/Refresh'
-import GridViewIcon from '@mui/icons-material/GridView'
-import ViewListIcon from '@mui/icons-material/ViewList'
+import { Info, RotateCcw, LayoutGrid, List } from 'lucide-react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import FlightSearch from '../components/flights/FlightSearch'
 import FlightTabs from '../components/flights/FlightTabs'
 import FlightCard from '../components/flights/FlightCard'
@@ -28,29 +20,33 @@ import { getCityInfo } from '../services/weatherService'
 
 function EmptyState({ query, onReset }) {
   return (
-    <Card sx={{ p: { xs: 4, sm: 6 }, textAlign: 'center' }}>
-      <Box sx={{ mx: 'auto', width: 48, height: 48, borderRadius: 4, bgcolor: 'action.hover', display: 'grid', placeItems: 'center' }}>
-        <InfoOutlinedIcon sx={{ color: 'text.secondary' }} />
-      </Box>
-      <Typography variant="h6" sx={{ mt: 2 }}>No matching flights</Typography>
-      <Typography sx={{ mx: 'auto', mt: 1, maxWidth: 420, fontSize: 14, fontWeight: 500, lineHeight: 1.6, color: 'text.secondary' }}>
+    <Card className="p-8 text-center sm:p-12">
+      <div className="mx-auto grid size-12 place-items-center rounded-2xl bg-accent">
+        <Info className="size-5 text-muted-foreground" />
+      </div>
+      <h3 className="mt-4 font-heading text-lg font-bold">No matching flights</h3>
+      <p className="mx-auto mt-2 max-w-[420px] text-sm leading-relaxed font-medium text-muted-foreground">
         We couldn't find a demo flight matching "{query}". Try BA117, London, JFK, British Airways, or clear the search.
-      </Typography>
-      <Button variant="outlined" onClick={onReset} sx={{ mt: 2.5 }}>Clear search</Button>
+      </p>
+      <Button variant="outline" onClick={onReset} className="mt-4">
+        Clear search
+      </Button>
     </Card>
   )
 }
 
 function ErrorState({ onRetry }) {
   return (
-    <Alert severity="error" icon={<InfoOutlinedIcon />} sx={{ p: 2.5 }}>
-      <AlertTitle sx={{ fontWeight: 800 }}>Flight information unavailable</AlertTitle>
-      The interface is ready for API error handling. Retry to restore the mock feed.
-      <Box sx={{ mt: 1.5 }}>
-        <Button variant="contained" color="error" size="small" startIcon={<RefreshIcon />} onClick={onRetry}>
+    <Alert variant="error">
+      <Info className="size-5" />
+      <AlertTitle>Flight information unavailable</AlertTitle>
+      <AlertDescription>The interface is ready for API error handling. Retry to restore the mock feed.</AlertDescription>
+      <div className="col-start-2 mt-2">
+        <Button size="sm" className="bg-error hover:bg-error-dark" onClick={onRetry}>
+          <RotateCcw className="size-4" />
           Try Again
         </Button>
-      </Box>
+      </div>
     </Alert>
   )
 }
@@ -71,43 +67,32 @@ export default function FlightsPage({ countdown }) {
   const { tab, changeTab, search, loading, error, setError, visibleFlights, doSearch, clearSearch } = useFlightSearch(allFlights)
 
   return (
-    <Box component="section" id="flights" sx={{ scrollMarginTop: 96, pt: 3.5 }}>
+    <section id="flights" className="scroll-mt-24 pt-3.5">
       <FlightSearch onSearch={doSearch} onClear={clearSearch} loading={loading} />
 
-      <Stack direction="row" flexWrap="wrap" justifyContent="space-between" alignItems="flex-end" gap={2} sx={{ mb: 2.5, mt: 3.5 }}>
+      <div className="mt-7 mb-4 flex flex-row flex-wrap items-end justify-between gap-2">
         <SectionHeading eyebrow="Flights" title="Your travel day at a glance" />
-        <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
+        <div className="flex flex-row flex-wrap items-center gap-2">
           <FlightTabs value={tab} onChange={changeTab} />
           {tab !== 'connection' && (
-            <Box sx={{ bgcolor: 'action.hover', borderRadius: 999, p: 0.5 }}>
-              <Tabs
-                value={view}
-                onChange={(_e, v) => setView(v)}
-                TabIndicatorProps={{ sx: { display: 'none' } }}
-                sx={{ minHeight: 0 }}
-              >
-                <Tab
-                  value="cards"
-                  label="Cards"
-                  icon={<GridViewIcon sx={{ fontSize: 15 }} />}
-                  iconPosition="start"
-                  sx={{ minHeight: 36, fontSize: 12, px: 1.5, '&.Mui-selected': { bgcolor: 'background.paper', boxShadow: '0 1px 3px rgba(20,24,31,0.12)' } }}
-                />
-                <Tab
-                  value="board"
-                  label="Board"
-                  icon={<ViewListIcon sx={{ fontSize: 15 }} />}
-                  iconPosition="start"
-                  sx={{ minHeight: 36, fontSize: 12, px: 1.5, '&.Mui-selected': { bgcolor: 'background.paper', boxShadow: '0 1px 3px rgba(20,24,31,0.12)' } }}
-                />
-              </Tabs>
-            </Box>
+            <Tabs value={view} onValueChange={setView}>
+              <TabsList aria-label="Flight display">
+                <TabsTrigger value="cards">
+                  <LayoutGrid />
+                  Cards
+                </TabsTrigger>
+                <TabsTrigger value="board">
+                  <List />
+                  Board
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
           )}
-        </Stack>
-      </Stack>
+        </div>
+      </div>
 
-      <Box sx={{ display: 'grid', gap: 2.5, gridTemplateColumns: { xs: '1fr', lg: 'minmax(0,1.7fr) minmax(320px,.8fr)' } }}>
-        <Stack spacing={2}>
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1.7fr)_minmax(320px,0.8fr)]">
+        <div className="flex flex-col gap-4">
           {loading ? (
             <>
               <SkeletonFlightCard />
@@ -122,17 +107,15 @@ export default function FlightsPage({ countdown }) {
           ) : view === 'board' ? (
             <DepartureBoard heading={tab === 'arrival' ? 'ARRIVALS' : 'DEPARTURES'} flights={visibleFlights} />
           ) : (
-            visibleFlights.map((flight, i) => (
-              <FlightCard key={flight.id} flight={flight} featured={flight.id === 'ba117' && i === 0} />
-            ))
+            visibleFlights.map((flight, i) => <FlightCard key={flight.id} flight={flight} featured={flight.id === 'ba117' && i === 0} />)
           )}
-        </Stack>
-        <Stack component="aside" spacing={2}>
+        </div>
+        <div className="flex flex-col gap-4">
           {cityInfo && <CityWeatherCard cities={cityInfo} selected={selectedCity} onSelect={setSelectedCity} />}
           <AirportSnapshot />
           <AlertEscalation countdown={countdown} />
-        </Stack>
-      </Box>
-    </Box>
+        </div>
+      </div>
+    </section>
   )
 }

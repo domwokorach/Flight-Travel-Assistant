@@ -1,21 +1,14 @@
 import React, { useState } from 'react'
 import { format, parseISO } from 'date-fns'
-import Card from '@mui/material/Card'
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import TextField from '@mui/material/TextField'
-import MenuItem from '@mui/material/MenuItem'
-import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
-import Chip from '@mui/material/Chip'
-import InputAdornment from '@mui/material/InputAdornment'
-import CircularProgress from '@mui/material/CircularProgress'
-import SearchIcon from '@mui/icons-material/Search'
-import RestartAltIcon from '@mui/icons-material/RestartAlt'
-import ScheduleIcon from '@mui/icons-material/Schedule'
+import { Search, RotateCcw, Clock, Loader2 } from 'lucide-react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AirlineLogo from './AirlineLogo'
-import { getAirline } from '../../data/airlines'
+import { getAirline } from '@/data/airlines'
 
 const recent = ['BA117', 'VS103', 'London', 'JFK']
 
@@ -34,116 +27,108 @@ export default function FlightSearch({ onSearch, onClear, loading = false }) {
     e.preventDefault()
     onSearch({ query, searchBy, date: format(parseISO(date), 'yyyy-MM-dd'), filter })
   }
-  const clear = () => { setQuery(''); setFilter('All'); onClear() }
+  const clear = () => {
+    setQuery('')
+    setFilter('All')
+    onClear()
+  }
 
   return (
-    <Card sx={{ position: 'relative', overflow: 'hidden', p: { xs: 2.5, sm: 3 } }}>
-      <Box sx={{ position: 'absolute', inset: '0 0 auto 0', height: 4, background: 'linear-gradient(90deg, #0B5FA5, #38BDF8, #0B5FA5)' }} />
-      <Box component="form" onSubmit={submit}>
-        <Stack direction="row" flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={1.5} sx={{ mb: 2.5 }}>
-          <Box>
-            <Typography variant="overline" sx={{ fontSize: 11, color: 'text.secondary' }}>Find your flight</Typography>
-            <Typography variant="h4" component="h1" sx={{ mt: 0.5, fontSize: { xs: 24, sm: 30 } }}>
-              Departures, arrivals & connections
-            </Typography>
-          </Box>
-          <Chip label="Live-style demo data" size="small" sx={{ bgcolor: 'primary.light', color: 'primary.dark', display: { xs: 'none', sm: 'inline-flex' } }} />
-        </Stack>
+    <Card className="relative overflow-hidden p-5 sm:p-6">
+      <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#0B5FA5,#38BDF8,#0B5FA5)]" />
+      <form onSubmit={submit}>
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-[11px] font-bold text-muted-foreground">Find your flight</p>
+            <h1 className="mt-0.5 font-heading text-2xl font-extrabold sm:text-[30px]">Departures, arrivals & connections</h1>
+          </div>
+          <Badge className="hidden bg-primary-light text-primary-dark sm:inline-flex">Live-style demo data</Badge>
+        </div>
 
-        <Stack direction={{ xs: 'column', lg: 'row' }} spacing={1.5} alignItems={{ lg: 'flex-end' }}>
-          <TextField
-            label="Date"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            size="small"
-            sx={{ minWidth: 170 }}
-            InputLabelProps={{ shrink: true }}
-          />
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-end">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="search-date">Date</Label>
+            <Input id="search-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} className="h-10 lg:w-[170px]" />
+          </div>
 
-          <TextField
-            select
-            label="Search by"
-            value={searchBy}
-            onChange={(e) => setSearchBy(e.target.value)}
-            size="small"
-            sx={{ minWidth: 170 }}
-          >
-            {['Airline', 'Flight number', 'City', 'Airport'].map(opt => (
-              <MenuItem key={opt} value={opt}>{opt}</MenuItem>
-            ))}
-          </TextField>
+          <div className="flex flex-col gap-1.5">
+            <Label>Search by</Label>
+            <Select value={searchBy} onValueChange={setSearchBy}>
+              <SelectTrigger size="sm" className="h-10 lg:w-[170px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {['Airline', 'Flight number', 'City', 'Airport'].map((opt) => (
+                  <SelectItem key={opt} value={opt}>
+                    {opt}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-          <TextField
-            label="Search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="BA117, British Airways, London, LHR…"
-            size="small"
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" sx={{ color: 'text.secondary' }} />
-                </InputAdornment>
-              ),
-            }}
-          />
+          <div className="flex flex-1 flex-col gap-1.5">
+            <Label htmlFor="search-query">Search</Label>
+            <div className="relative">
+              <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                id="search-query"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="BA117, British Airways, London, LHR…"
+                className="h-10 pl-10"
+              />
+            </div>
+          </div>
 
-          <TextField
-            select
-            label="Flight type"
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            size="small"
-            sx={{ minWidth: 170 }}
-          >
-            {['All', 'Departures', 'Arrivals', 'Connections'].map(opt => (
-              <MenuItem key={opt} value={opt}>{opt}</MenuItem>
-            ))}
-          </TextField>
+          <div className="flex flex-col gap-1.5">
+            <Label>Flight type</Label>
+            <Select value={filter} onValueChange={setFilter}>
+              <SelectTrigger size="sm" className="h-10 lg:w-[170px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {['All', 'Departures', 'Arrivals', 'Connections'].map((opt) => (
+                  <SelectItem key={opt} value={opt}>
+                    {opt}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-          <Stack direction="row" spacing={1}>
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={loading}
-              startIcon={loading ? <CircularProgress size={16} color="inherit" /> : <SearchIcon />}
-              sx={{ flex: { xs: 1, lg: 'none' }, height: 40 }}
-            >
+          <div className="flex gap-2">
+            <Button type="submit" disabled={loading} className="h-10 flex-1 lg:flex-none">
+              {loading ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}
               Search
             </Button>
-            <IconButton
-              type="button"
-              onClick={clear}
-              aria-label="Clear search"
-              sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 3, width: 40, height: 40 }}
-            >
-              <RestartAltIcon fontSize="small" />
-            </IconButton>
-          </Stack>
-        </Stack>
+            <Button type="button" variant="outline" size="icon" onClick={clear} aria-label="Clear search" className="size-10 rounded-xl">
+              <RotateCcw className="size-4" />
+            </Button>
+          </div>
+        </div>
 
-        <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1} sx={{ mt: 2.5, rowGap: 1 }}>
-          <Stack direction="row" alignItems="center" spacing={0.5} sx={{ color: 'text.secondary', fontSize: 12, fontWeight: 700 }}>
-            <ScheduleIcon sx={{ fontSize: 15 }} />
-            <span>Recent:</span>
-          </Stack>
-          {recent.map(item => {
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          <span className="flex items-center gap-1 text-xs font-bold text-muted-foreground">
+            <Clock className="size-3.5" />
+            Recent:
+          </span>
+          {recent.map((item) => {
             const code = airlineCodeFor(item)
             return (
-              <Chip
+              <button
                 key={item}
+                type="button"
                 onClick={() => setQuery(item)}
-                avatar={code ? <AirlineLogo airlineCode={code} size="sm" sx={{ width: 20, height: 20, fontSize: 9 }} /> : undefined}
-                label={item}
-                variant="outlined"
-                sx={{ bgcolor: 'action.hover', fontWeight: 700 }}
-              />
+                className="inline-flex h-8 items-center gap-1.5 rounded-full border border-border bg-accent px-3 text-xs font-bold transition-colors hover:bg-muted"
+              >
+                {code && <AirlineLogo airlineCode={code} size="sm" className="size-5" />}
+                {item}
+              </button>
             )
           })}
-        </Stack>
-      </Box>
+        </div>
+      </form>
     </Card>
   )
 }

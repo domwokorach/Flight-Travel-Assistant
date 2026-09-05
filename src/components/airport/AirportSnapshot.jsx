@@ -1,56 +1,45 @@
 import React from 'react'
-import Card from '@mui/material/Card'
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import Chip from '@mui/material/Chip'
-import Link from '@mui/material/Link'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import VerifiedUserIcon from '@mui/icons-material/VerifiedUser'
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom'
-import TimerIcon from '@mui/icons-material/Timer'
+import { ArrowRight, ShieldCheck, DoorOpen, Timer } from 'lucide-react'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import SplitFlapText from '../board/SplitFlapText'
 
 export default function AirportSnapshot() {
   return (
-    <Card sx={{ p: { xs: 2.5, sm: 3 } }}>
-      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2}>
-        <Box>
-          <Typography variant="overline" sx={{ fontSize: 11, color: 'text.secondary' }}>Airport snapshot</Typography>
-          <Typography sx={{ mt: 0.5, fontWeight: 800, fontSize: 18 }}>London Heathrow · T5</Typography>
-        </Box>
-        <Chip label="Operations normal" size="small" sx={{ bgcolor: 'success.light', color: 'success.dark' }} />
-      </Stack>
-      <Stack spacing={1.5} sx={{ mt: 2.5 }}>
-        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ borderRadius: 4, bgcolor: 'action.hover', p: 1.5 }}>
-          <Stack direction="row" spacing={1} alignItems="center" sx={{ fontSize: 14, fontWeight: 700, color: 'text.primary' }}>
-            <VerifiedUserIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+    <Card className="p-5 sm:p-6">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-[11px] font-bold text-muted-foreground">Airport snapshot</p>
+          <p className="mt-1 text-lg font-extrabold">London Heathrow · T5</p>
+        </div>
+        <Badge className="bg-success-light text-success-dark">Operations normal</Badge>
+      </div>
+      <div className="mt-6 flex flex-col gap-3">
+        <div className="flex items-center justify-between rounded-2xl bg-accent p-3.5">
+          <div className="flex items-center gap-2 text-sm font-bold">
+            <ShieldCheck className="size-4.5 text-muted-foreground" />
             <span>Security</span>
-          </Stack>
-          <Typography sx={{ fontSize: 14, fontWeight: 800 }}>8–12 min</Typography>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ borderRadius: 4, bgcolor: 'action.hover', p: 1.5 }}>
-          <Stack direction="row" spacing={1} alignItems="center" sx={{ fontSize: 14, fontWeight: 700, color: 'text.primary' }}>
-            <MeetingRoomIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+          </div>
+          <p className="text-sm font-extrabold">8–12 min</p>
+        </div>
+        <div className="flex items-center justify-between rounded-2xl bg-accent p-3.5">
+          <div className="flex items-center gap-2 text-sm font-bold">
+            <DoorOpen className="size-4.5 text-muted-foreground" />
             <span>Gate</span>
-          </Stack>
-          <SplitFlapText value="B42" sx={{ fontSize: 14, color: 'primary.main' }} />
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ borderRadius: 4, bgcolor: '#FDECDD', p: 1.5 }}>
-          <Stack direction="row" spacing={1} alignItems="center" sx={{ fontSize: 14, fontWeight: 700, color: '#7C3E07' }}>
-            <TimerIcon sx={{ fontSize: 18 }} />
+          </div>
+          <SplitFlapText value="B42" className="text-sm text-primary" />
+        </div>
+        <div className="flex items-center justify-between rounded-2xl bg-[#FDECDD] p-3.5">
+          <div className="flex items-center gap-2 text-sm font-bold text-[#7C3E07]">
+            <Timer className="size-4.5" />
             <span>Gate closes</span>
-          </Stack>
-          <SplitFlapText value="14:55" sx={{ fontSize: 14, color: '#7C3E07' }} />
-        </Stack>
-      </Stack>
-      <Link
-        href="#airport"
-        underline="hover"
-        sx={{ mt: 2, display: 'inline-flex', alignItems: 'center', gap: 0.75, fontSize: 14, fontWeight: 800, color: 'primary.main' }}
-      >
-        Airport services <ArrowForwardIcon sx={{ fontSize: 16 }} />
-      </Link>
+          </div>
+          <SplitFlapText value="14:55" className="text-sm text-[#7C3E07]" />
+        </div>
+      </div>
+      <a href="#airport" className="mt-4 inline-flex items-center gap-1.5 text-sm font-extrabold text-primary hover:underline">
+        Airport services <ArrowRight className="size-4" />
+      </a>
     </Card>
   )
 }

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
 import DirectionsPanel from '../components/transport/DirectionsPanel'
 import TransportCard from '../components/transport/TransportCard'
 import { SectionHeading } from '../components/common/SectionHeading'
@@ -16,29 +14,33 @@ export default function TransportPage() {
   }, [])
 
   return (
-    <Box component="section" id="transport" sx={{ scrollMarginTop: 96, pt: 5 }}>
+    <section id="transport" className="scroll-mt-24 pt-10">
       <SectionHeading eyebrow="Transport & directions" title="Airport transfers without the guesswork" />
       <DirectionsPanel />
-      <Box sx={{ mt: 3.5, display: 'grid', gap: 4, gridTemplateColumns: { xs: '1fr', xl: '1fr 1fr' } }}>
-        <Box>
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="overline" sx={{ fontSize: 11, color: 'text.secondary' }}>To the airport</Typography>
-            <Typography variant="h6" sx={{ mt: 0.5 }}>Central London → Heathrow</Typography>
-          </Box>
-          <Box sx={{ display: 'grid', gap: 1.5, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' } }}>
-            {transportTo.map(item => <TransportCard key={item.mode} item={item} />)}
-          </Box>
-        </Box>
-        <Box>
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="overline" sx={{ fontSize: 11, color: 'text.secondary' }}>From the arrival airport</Typography>
-            <Typography variant="h6" sx={{ mt: 0.5 }}>JFK → Manhattan</Typography>
-          </Box>
-          <Box sx={{ display: 'grid', gap: 1.5, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' } }}>
-            {transportFrom.map(item => <TransportCard key={item.mode} item={item} />)}
-          </Box>
-        </Box>
-      </Box>
-    </Box>
+      <div className="mt-7 grid gap-8 xl:grid-cols-2">
+        <div>
+          <div className="mb-4">
+            <p className="text-[11px] font-bold text-muted-foreground">To the airport</p>
+            <h3 className="mt-0.5 font-heading text-lg font-bold">Central London → Heathrow</h3>
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {transportTo.map((item) => (
+              <TransportCard key={item.mode} item={item} />
+            ))}
+          </div>
+        </div>
+        <div>
+          <div className="mb-4">
+            <p className="text-[11px] font-bold text-muted-foreground">From the arrival airport</p>
+            <h3 className="mt-0.5 font-heading text-lg font-bold">JFK → Manhattan</h3>
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {transportFrom.map((item) => (
+              <TransportCard key={item.mode} item={item} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }

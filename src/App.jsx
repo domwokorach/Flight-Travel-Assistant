@@ -1,8 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import Box from '@mui/material/Box'
-import Container from '@mui/material/Container'
-import Typography from '@mui/material/Typography'
-import WarningAmberIcon from '@mui/icons-material/WarningAmber'
+import { TriangleAlert } from 'lucide-react'
 import Header from './components/navigation/Header'
 import CommandMenu from './components/navigation/CommandMenu'
 import MobileTravelBar from './components/alerts/MobileTravelBar'
@@ -27,7 +24,7 @@ export default function App() {
         notify(countdown.label, {
           description: 'British Airways BA117 · Gate B42',
           severity: 'warning',
-          icon: <WarningAmberIcon fontSize="small" />,
+          icon: <TriangleAlert className="size-4" />,
         })
         if (!alertOpen) setAlertOpen(true)
       }
@@ -35,21 +32,21 @@ export default function App() {
   }, [countdown.label, countdown.tone, alertOpen, notify])
 
   return (
-    <Box id="top" sx={{ minHeight: '100vh', bgcolor: 'background.default', pb: { xs: 12, md: 0 } }}>
+    <div id="top" className="min-h-screen bg-background pb-24 md:pb-0">
       <Header onOpenCommandMenu={() => setCommandOpen(true)} />
-      <Container maxWidth="lg" component="main" sx={{ py: { xs: 3, sm: 4 } }}>
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
         <FlightsPage countdown={countdown} />
         <AirportPage />
         <TransportPage />
-        <Box component="footer" sx={{ mt: 8, borderTop: '1px solid', borderColor: 'divider', py: 4, textAlign: 'center' }}>
-          <Typography sx={{ fontSize: 12, fontWeight: 700, color: 'text.secondary' }}>
+        <footer className="mt-16 border-t border-border py-8 text-center">
+          <p className="text-xs font-bold text-muted-foreground">
             FlightPath prototype · Mock data structured for future flight, weather, airport and transport APIs
-          </Typography>
-        </Box>
-      </Container>
+          </p>
+        </footer>
+      </main>
       <MobileTravelBar countdown={countdown} onAlert={() => setAlertOpen(true)} />
       <GateAlert countdown={countdown} open={alertOpen} onOpenChange={setAlertOpen} />
       <CommandMenu open={commandOpen} onOpenChange={setCommandOpen} onOpenGateAlert={() => setAlertOpen(true)} />
-    </Box>
+    </div>
   )
 }

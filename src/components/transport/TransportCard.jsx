@@ -1,48 +1,39 @@
 import React from 'react'
-import Card from '@mui/material/Card'
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import Chip from '@mui/material/Chip'
-import Button from '@mui/material/Button'
-import TrainIcon from '@mui/icons-material/Train'
-import TramIcon from '@mui/icons-material/Tram'
-import DirectionsBusIcon from '@mui/icons-material/DirectionsBus'
-import LocalTaxiIcon from '@mui/icons-material/LocalTaxi'
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar'
-import NavigationIcon from '@mui/icons-material/Navigation'
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
-import ScheduleIcon from '@mui/icons-material/Schedule'
+import { TrainFront, TramFront, Bus, CarTaxiFront, Car, Navigation, DollarSign, Clock } from 'lucide-react'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 
-const icons = { train: TrainIcon, metro: TramIcon, bus: DirectionsBusIcon, taxi: LocalTaxiIcon, car: DirectionsCarIcon }
+const icons = { train: TrainFront, metro: TramFront, bus: Bus, taxi: CarTaxiFront, car: Car }
 
 export default function TransportCard({ item }) {
-  const Icon = icons[item.kind] || NavigationIcon
+  const Icon = icons[item.kind] || Navigation
   return (
-    <Card sx={{ p: 2.5 }}>
-      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2}>
-        <Stack direction="row" spacing={1.5}>
-          <Box sx={{ width: 44, height: 44, borderRadius: 4, bgcolor: 'primary.light', color: 'primary.dark', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
-            <Icon fontSize="small" />
-          </Box>
-          <Box>
-            <Typography sx={{ fontWeight: 800 }}>{item.mode}</Typography>
-            <Typography sx={{ mt: 0.25, fontSize: 12, fontWeight: 700, color: 'success.dark' }}>{item.status}</Typography>
-          </Box>
-        </Stack>
-        <Chip label={`Next ${item.next}`} size="small" sx={{ bgcolor: 'action.hover', color: 'text.secondary' }} />
-      </Stack>
-      <Box sx={{ mt: 2, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5, borderRadius: 4, bgcolor: 'action.hover', p: 1.5 }}>
-        <Stack direction="row" spacing={1} alignItems="center" sx={{ fontSize: 13, fontWeight: 700 }}>
-          <ScheduleIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+    <Card className="p-5">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex gap-3">
+          <div className="grid size-11 shrink-0 place-items-center rounded-2xl bg-primary-light text-primary-dark">
+            <Icon className="size-4.5" />
+          </div>
+          <div>
+            <p className="font-extrabold">{item.mode}</p>
+            <p className="mt-0.5 text-xs font-bold text-success-dark">{item.status}</p>
+          </div>
+        </div>
+        <Badge variant="secondary">Next {item.next}</Badge>
+      </div>
+      <div className="mt-4 grid grid-cols-2 gap-3 rounded-2xl bg-accent p-3.5 *:min-w-0">
+        <div className="flex items-center gap-2 text-[13px] font-bold">
+          <Clock className="size-4 text-muted-foreground" />
           <span>{item.time}</span>
-        </Stack>
-        <Stack direction="row" spacing={1} alignItems="center" sx={{ fontSize: 13, fontWeight: 700 }}>
-          <AttachMoneyIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+        </div>
+        <div className="flex items-center gap-2 text-[13px] font-bold">
+          <DollarSign className="size-4 text-muted-foreground" />
           <span>{item.price}</span>
-        </Stack>
-      </Box>
-      <Button variant="outlined" fullWidth startIcon={<NavigationIcon />} sx={{ mt: 2 }}>
+        </div>
+      </div>
+      <Button variant="outline" className="mt-4 w-full">
+        <Navigation className="size-4" />
         Get directions
       </Button>
     </Card>
