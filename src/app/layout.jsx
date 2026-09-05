@@ -1,4 +1,5 @@
 import { Inter, Manrope, IBM_Plex_Mono } from 'next/font/google'
+import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
@@ -16,13 +17,22 @@ export const metadata = {
 }
 
 export const viewport = {
-  themeColor: '#08111F',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#F5F7FA' },
+    { media: '(prefers-color-scheme: dark)', color: '#08111F' },
+  ],
 }
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${manrope.variable} ${plexMono.variable}`}>
-      <body>{children}</body>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} ${manrope.variable} ${plexMono.variable}`}
+    >
+      <body>
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   )
 }

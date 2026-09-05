@@ -4,7 +4,56 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Dark aviation navy — fixed theme, not a light/dark toggle */
+  /* Aviation daylight — light theme (default) */
+  --background: #F5F7FA;
+  --background-alt: #EEF2F7;
+  --surface-elevated: #FFFFFF;
+  --paper: #FFFFFF;
+  --surface-subtle: #E7ECF3;
+
+  --primary: #2E6FE0;
+  --primary-light: #4F8CFF;
+  --primary-dark: #1F54B8;
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #E7ECF3;
+  --secondary-foreground: #12213A;
+
+  --success: #17A673;
+  --success-light: rgba(23, 166, 115, 0.12);
+  --success-dark: #0E7A54;
+
+  --warning: #B4720A;
+  --warning-light: rgba(180, 114, 10, 0.12);
+  --warning-dark: #8A5807;
+
+  --error: #DC2626;
+  --error-light: rgba(220, 38, 38, 0.1);
+  --error-dark: #B91C1C;
+
+  --info: #0891B2;
+  --info-light: rgba(8, 145, 178, 0.12);
+  --info-dark: #066A80;
+
+  --text-primary: #0E1A2B;
+  --text-secondary: #48566B;
+  --text-tertiary: #7A8AA0;
+  --border: #DCE3EC;
+  --border-muted: rgba(15, 23, 42, 0.08);
+  --action-hover: rgba(15, 23, 42, 0.05);
+
+  /* Departure board is a physical-hardware look — stays dark in both themes */
+  --board-bg: #060D17;
+  --board-alt: #0B131F;
+  --board-text: #F4F1E8;
+  --board-muted: #8190A5;
+
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 8px 24px rgba(15, 23, 42, 0.08);
+  --shadow-popover: 0 20px 45px rgba(15, 23, 42, 0.16);
+}
+
+.dark {
+  /* Dark aviation navy */
   --background: #08111F;
   --background-alt: #0D1726;
   --surface-elevated: #111C2D;
@@ -42,11 +91,11 @@
   --border-muted: rgba(255, 255, 255, 0.08);
   --action-hover: rgba(255, 255, 255, 0.05);
 
-  --board-bg: #060D17;
-  --board-alt: #0B131F;
-  --board-text: #F4F1E8;
-  --board-muted: #8190A5;
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 8px 24px rgba(2, 6, 14, 0.35);
+  --shadow-popover: 0 20px 45px rgba(2, 6, 14, 0.55);
+}
 
+:root {
   /* shadcn/ui semantic tokens, mapped onto the aviation palette above */
   --foreground: var(--text-primary);
   --card: var(--paper);
@@ -71,9 +120,6 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-heading: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 8px 24px rgba(2, 6, 14, 0.35);
-  --shadow-popover: 0 20px 45px rgba(2, 6, 14, 0.55);
 }
 
 @theme inline {
@@ -154,6 +200,10 @@ html {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   scroll-behavior: smooth;
+  color-scheme: light dark;
+}
+
+.dark {
   color-scheme: dark;
 }
 

@@ -14,7 +14,7 @@ export default function MobileNavigation({ items }) {
         size="icon"
         aria-label="Open navigation"
         onClick={() => setOpen(true)}
-        className="text-text-secondary hover:bg-white/5 md:hidden"
+        className="text-text-secondary hover:bg-accent md:hidden"
       >
         <Menu className="size-5" />
       </Button>
@@ -34,7 +34,7 @@ export default function MobileNavigation({ items }) {
                 <p className="font-extrabold">FlightPath</p>
               </div>
               <SheetClose asChild>
-                <Button variant="ghost" size="icon" aria-label="Close navigation" className="text-text-secondary hover:bg-white/5">
+                <Button variant="ghost" size="icon" aria-label="Close navigation" className="text-text-secondary hover:bg-accent">
                   <X className="size-4.5" />
                 </Button>
               </SheetClose>
@@ -45,7 +45,7 @@ export default function MobileNavigation({ items }) {
                   key={href}
                   href={href}
                   onClick={() => setOpen(false)}
-                  className="min-h-11 rounded-2xl px-3.5 py-3 text-sm font-bold hover:bg-white/5"
+                  className="min-h-11 rounded-2xl px-3.5 py-3 text-sm font-bold hover:bg-accent"
                 >
                   {label}
                 </a>
