@@ -1,21 +1,19 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { MotionConfig } from 'framer-motion'
+import CssBaseline from '@mui/material/CssBaseline'
+import { ThemeProvider } from '@mui/material/styles'
 import App from './App'
-import { ThemeProvider } from './components/common/ThemeProvider'
-import { TooltipProvider } from './components/ui/tooltip'
-import { Toaster } from './components/ui/sonner'
+import theme from './theme'
+import { SnackbarProvider } from './lib/snackbar'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ThemeProvider>
-      <MotionConfig reducedMotion="user">
-        <TooltipProvider delayDuration={200}>
-          <App />
-          <Toaster position="bottom-right" richColors closeButton />
-        </TooltipProvider>
-      </MotionConfig>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <SnackbarProvider>
+        <App />
+      </SnackbarProvider>
     </ThemeProvider>
   </React.StrictMode>,
 )

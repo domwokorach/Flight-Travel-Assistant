@@ -1,14 +1,20 @@
 import React from 'react'
-import { Clock3 } from 'lucide-react'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import { useLocalTime } from '../../hooks/useLocalTime'
 
 export default function LocalTimeCard({ offsetHours, offsetLabel }) {
   const time = useLocalTime(offsetHours)
   return (
-    <div className="rounded-2xl bg-foreground p-4 text-background">
-      <div className="flex items-center gap-2 opacity-70"><Clock3 className="h-4 w-4"/><span className="text-xs font-bold uppercase tracking-wide">Local time</span></div>
-      <div className="mt-2 text-3xl font-black tracking-tight tabular-nums">{time}</div>
-      <div className="mt-1 text-xs font-semibold opacity-70">{offsetLabel}</div>
-    </div>
+    <Box sx={{ borderRadius: 4, bgcolor: 'text.primary', color: 'background.paper', p: 2 }}>
+      <Stack direction="row" spacing={1} alignItems="center" sx={{ opacity: 0.7 }}>
+        <AccessTimeIcon sx={{ fontSize: 16 }} />
+        <Typography sx={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Local time</Typography>
+      </Stack>
+      <Typography sx={{ mt: 1, fontSize: 28, fontWeight: 800, fontVariantNumeric: 'tabular-nums' }}>{time}</Typography>
+      <Typography sx={{ mt: 0.5, fontSize: 12, fontWeight: 600, opacity: 0.7 }}>{offsetLabel}</Typography>
+    </Box>
   )
 }

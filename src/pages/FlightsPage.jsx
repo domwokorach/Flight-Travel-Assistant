@@ -1,43 +1,56 @@
 import React, { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { Info, RefreshCw, TriangleAlert } from 'lucide-react'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Card from '@mui/material/Card'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import RefreshIcon from '@mui/icons-material/Refresh'
+import GridViewIcon from '@mui/icons-material/GridView'
+import ViewListIcon from '@mui/icons-material/ViewList'
 import FlightSearch from '../components/flights/FlightSearch'
 import FlightTabs from '../components/flights/FlightTabs'
 import FlightCard from '../components/flights/FlightCard'
 import ConnectionCard from '../components/flights/ConnectionCard'
+import DepartureBoard from '../components/board/DepartureBoard'
 import CityWeatherCard from '../components/location/CityWeatherCard'
 import AirportSnapshot from '../components/airport/AirportSnapshot'
 import AlertEscalation from '../components/alerts/AlertEscalation'
-import { Button } from '../components/ui/button'
-import { Card } from '../components/ui/card'
-import { Alert, AlertDescription, AlertTitle } from '../components/ui/alert'
 import { SkeletonFlightCard } from '../components/flights/FlightCardSkeleton'
 import { SectionHeading } from '../components/common/SectionHeading'
 import { useFlightSearch } from '../hooks/useFlightSearch'
 import { getFlights, getConnectionJourney } from '../services/flightService'
 import { getCityInfo } from '../services/weatherService'
-import { staggerContainer } from '@/lib/motion'
 
 function EmptyState({ query, onReset }) {
   return (
-    <Card className="p-8 text-center sm:p-12">
-      <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-muted"><Info className="h-5 w-5 text-muted-foreground"/></div>
-      <h3 className="mt-4 text-lg font-black text-foreground">No matching flights</h3>
-      <p className="mx-auto mt-2 max-w-md text-sm font-medium leading-6 text-muted-foreground">We couldn't find a demo flight matching “{query}”. Try BA117, London, JFK, British Airways, or clear the search.</p>
-      <Button variant="outline" onClick={onReset} className="mt-5">Clear search</Button>
+    <Card sx={{ p: { xs: 4, sm: 6 }, textAlign: 'center' }}>
+      <Box sx={{ mx: 'auto', width: 48, height: 48, borderRadius: 4, bgcolor: 'action.hover', display: 'grid', placeItems: 'center' }}>
+        <InfoOutlinedIcon sx={{ color: 'text.secondary' }} />
+      </Box>
+      <Typography variant="h6" sx={{ mt: 2 }}>No matching flights</Typography>
+      <Typography sx={{ mx: 'auto', mt: 1, maxWidth: 420, fontSize: 14, fontWeight: 500, lineHeight: 1.6, color: 'text.secondary' }}>
+        We couldn't find a demo flight matching "{query}". Try BA117, London, JFK, British Airways, or clear the search.
+      </Typography>
+      <Button variant="outlined" onClick={onReset} sx={{ mt: 2.5 }}>Clear search</Button>
     </Card>
   )
 }
 
 function ErrorState({ onRetry }) {
   return (
-    <Alert variant="destructive" className="p-5">
-      <TriangleAlert className="h-5 w-5" />
-      <AlertTitle className="text-base">Flight data couldn't be refreshed</AlertTitle>
-      <AlertDescription>
-        The interface is ready for API error handling. Retry to restore the mock feed.
-        <div className="mt-3"><Button variant="destructive" onClick={onRetry}><RefreshCw className="h-4 w-4" />Retry</Button></div>
-      </AlertDescription>
+    <Alert severity="error" icon={<InfoOutlinedIcon />} sx={{ p: 2.5 }}>
+      <AlertTitle sx={{ fontWeight: 800 }}>Flight information unavailable</AlertTitle>
+      The interface is ready for API error handling. Retry to restore the mock feed.
+      <Box sx={{ mt: 1.5 }}>
+        <Button variant="contained" color="error" size="small" startIcon={<RefreshIcon />} onClick={onRetry}>
+          Try Again
+        </Button>
+      </Box>
     </Alert>
   )
 }
@@ -47,6 +60,7 @@ export default function FlightsPage({ countdown }) {
   const [connectionJourney, setConnectionJourney] = useState(null)
   const [cityInfo, setCityInfo] = useState(null)
   const [selectedCity, setSelectedCity] = useState('destination')
+  const [view, setView] = useState('cards')
 
   useEffect(() => {
     getFlights().then(setAllFlights)
@@ -57,44 +71,68 @@ export default function FlightsPage({ countdown }) {
   const { tab, changeTab, search, loading, error, setError, visibleFlights, doSearch, clearSearch } = useFlightSearch(allFlights)
 
   return (
-    <section id="flights" className="scroll-mt-24 pt-7">
+    <Box component="section" id="flights" sx={{ scrollMarginTop: 96, pt: 3.5 }}>
       <FlightSearch onSearch={doSearch} onClear={clearSearch} loading={loading} />
 
-      <div className="mb-5 mt-7 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
+      <Stack direction="row" flexWrap="wrap" justifyContent="space-between" alignItems="flex-end" gap={2} sx={{ mb: 2.5, mt: 3.5 }}>
         <SectionHeading eyebrow="Flights" title="Your travel day at a glance" />
-        <FlightTabs value={tab} onChange={changeTab} />
-      </div>
+        <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1}>
+          <FlightTabs value={tab} onChange={changeTab} />
+          {tab !== 'connection' && (
+            <Box sx={{ bgcolor: 'action.hover', borderRadius: 999, p: 0.5 }}>
+              <Tabs
+                value={view}
+                onChange={(_e, v) => setView(v)}
+                TabIndicatorProps={{ sx: { display: 'none' } }}
+                sx={{ minHeight: 0 }}
+              >
+                <Tab
+                  value="cards"
+                  label="Cards"
+                  icon={<GridViewIcon sx={{ fontSize: 15 }} />}
+                  iconPosition="start"
+                  sx={{ minHeight: 36, fontSize: 12, px: 1.5, '&.Mui-selected': { bgcolor: 'background.paper', boxShadow: '0 1px 3px rgba(20,24,31,0.12)' } }}
+                />
+                <Tab
+                  value="board"
+                  label="Board"
+                  icon={<ViewListIcon sx={{ fontSize: 15 }} />}
+                  iconPosition="start"
+                  sx={{ minHeight: 36, fontSize: 12, px: 1.5, '&.Mui-selected': { bgcolor: 'background.paper', boxShadow: '0 1px 3px rgba(20,24,31,0.12)' } }}
+                />
+              </Tabs>
+            </Box>
+          )}
+        </Stack>
+      </Stack>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1.7fr)_minmax(320px,.8fr)]">
-        <div className="space-y-4">
-          <AnimatePresence mode="wait">
-            {loading ? (
-              <motion.div key="loading" className="space-y-4" exit={{ opacity: 0 }}>
-                <SkeletonFlightCard /><SkeletonFlightCard />
-              </motion.div>
-            ) : error ? (
-              <motion.div key="error" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <ErrorState onRetry={() => setError(false)} />
-              </motion.div>
-            ) : tab === 'connection' ? (
-              connectionJourney && <motion.div key="connection">{<ConnectionCard journey={connectionJourney} />}</motion.div>
-            ) : visibleFlights.length ? (
-              <motion.div key={tab + (search?.query || '')} variants={staggerContainer(0.08)} initial="hidden" animate="show" className="space-y-4">
-                {visibleFlights.map((flight, i) => <FlightCard key={flight.id} flight={flight} featured={flight.id === 'ba117' && i === 0} />)}
-              </motion.div>
-            ) : (
-              <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <EmptyState query={search?.query || ''} onReset={clearSearch} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-        <aside className="space-y-4">
+      <Box sx={{ display: 'grid', gap: 2.5, gridTemplateColumns: { xs: '1fr', lg: 'minmax(0,1.7fr) minmax(320px,.8fr)' } }}>
+        <Stack spacing={2}>
+          {loading ? (
+            <>
+              <SkeletonFlightCard />
+              <SkeletonFlightCard />
+            </>
+          ) : error ? (
+            <ErrorState onRetry={() => setError(false)} />
+          ) : tab === 'connection' ? (
+            connectionJourney && <ConnectionCard journey={connectionJourney} />
+          ) : !visibleFlights.length ? (
+            <EmptyState query={search?.query || ''} onReset={clearSearch} />
+          ) : view === 'board' ? (
+            <DepartureBoard heading={tab === 'arrival' ? 'ARRIVALS' : 'DEPARTURES'} flights={visibleFlights} />
+          ) : (
+            visibleFlights.map((flight, i) => (
+              <FlightCard key={flight.id} flight={flight} featured={flight.id === 'ba117' && i === 0} />
+            ))
+          )}
+        </Stack>
+        <Stack component="aside" spacing={2}>
           {cityInfo && <CityWeatherCard cities={cityInfo} selected={selectedCity} onSelect={setSelectedCity} />}
           <AirportSnapshot />
           <AlertEscalation countdown={countdown} />
-        </aside>
-      </div>
-    </section>
+        </Stack>
+      </Box>
+    </Box>
   )
 }

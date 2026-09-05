@@ -1,24 +1,56 @@
 import React from 'react'
-import { motion } from 'framer-motion'
-import { ArrowRight, DoorOpen, ShieldCheck, Timer } from 'lucide-react'
-import { Card } from '../ui/card'
-import { fadeInUp, smooth } from '@/lib/motion'
+import Card from '@mui/material/Card'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+import Chip from '@mui/material/Chip'
+import Link from '@mui/material/Link'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser'
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom'
+import TimerIcon from '@mui/icons-material/Timer'
+import SplitFlapText from '../board/SplitFlapText'
 
 export default function AirportSnapshot() {
   return (
-    <motion.div variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-40px' }} transition={smooth}>
-      <Card className="p-5 sm:p-6">
-        <div className="flex items-center justify-between gap-3">
-          <div><p className="eyebrow">Airport snapshot</p><h3 className="mt-1 text-lg font-black text-foreground">London Heathrow · T5</h3></div>
-          <span className="rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400">Operations normal</span>
-        </div>
-        <div className="mt-5 space-y-3">
-          <div className="flex items-center justify-between rounded-2xl bg-muted p-3"><span className="flex items-center gap-2 text-sm font-bold text-foreground/80"><ShieldCheck className="h-4 w-4 text-muted-foreground"/>Security</span><span className="text-sm font-black">8–12 min</span></div>
-          <div className="flex items-center justify-between rounded-2xl bg-muted p-3"><span className="flex items-center gap-2 text-sm font-bold text-foreground/80"><DoorOpen className="h-4 w-4 text-muted-foreground"/>Gate</span><span className="text-sm font-black text-primary">B42</span></div>
-          <div className="flex items-center justify-between rounded-2xl bg-orange-50 p-3 dark:bg-orange-500/10"><span className="flex items-center gap-2 text-sm font-bold text-orange-800 dark:text-orange-300"><Timer className="h-4 w-4"/>Gate closes</span><span className="text-sm font-black text-orange-900 dark:text-orange-200">14:55</span></div>
-        </div>
-        <a href="#airport" className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-primary hover:opacity-80">Airport services <ArrowRight className="h-4 w-4"/></a>
-      </Card>
-    </motion.div>
+    <Card sx={{ p: { xs: 2.5, sm: 3 } }}>
+      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2}>
+        <Box>
+          <Typography variant="overline" sx={{ fontSize: 11, color: 'text.secondary' }}>Airport snapshot</Typography>
+          <Typography sx={{ mt: 0.5, fontWeight: 800, fontSize: 18 }}>London Heathrow · T5</Typography>
+        </Box>
+        <Chip label="Operations normal" size="small" sx={{ bgcolor: 'success.light', color: 'success.dark' }} />
+      </Stack>
+      <Stack spacing={1.5} sx={{ mt: 2.5 }}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ borderRadius: 4, bgcolor: 'action.hover', p: 1.5 }}>
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ fontSize: 14, fontWeight: 700, color: 'text.primary' }}>
+            <VerifiedUserIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+            <span>Security</span>
+          </Stack>
+          <Typography sx={{ fontSize: 14, fontWeight: 800 }}>8–12 min</Typography>
+        </Stack>
+        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ borderRadius: 4, bgcolor: 'action.hover', p: 1.5 }}>
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ fontSize: 14, fontWeight: 700, color: 'text.primary' }}>
+            <MeetingRoomIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+            <span>Gate</span>
+          </Stack>
+          <SplitFlapText value="B42" sx={{ fontSize: 14, color: 'primary.main' }} />
+        </Stack>
+        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ borderRadius: 4, bgcolor: '#FDECDD', p: 1.5 }}>
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ fontSize: 14, fontWeight: 700, color: '#7C3E07' }}>
+            <TimerIcon sx={{ fontSize: 18 }} />
+            <span>Gate closes</span>
+          </Stack>
+          <SplitFlapText value="14:55" sx={{ fontSize: 14, color: '#7C3E07' }} />
+        </Stack>
+      </Stack>
+      <Link
+        href="#airport"
+        underline="hover"
+        sx={{ mt: 2, display: 'inline-flex', alignItems: 'center', gap: 0.75, fontSize: 14, fontWeight: 800, color: 'primary.main' }}
+      >
+        Airport services <ArrowForwardIcon sx={{ fontSize: 16 }} />
+      </Link>
+    </Card>
   )
 }

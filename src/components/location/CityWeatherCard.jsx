@@ -1,49 +1,77 @@
 import React from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { CloudSun, Sun, CloudRain, Cloud, Umbrella } from 'lucide-react'
-import { Card } from '../ui/card'
-import { Tabs, TabsList, TabsTrigger } from '../ui/tabs'
+import Card from '@mui/material/Card'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import WbSunnyIcon from '@mui/icons-material/WbSunny'
+import CloudQueueIcon from '@mui/icons-material/CloudQueue'
+import UmbrellaIcon from '@mui/icons-material/Umbrella'
 import LocalTimeCard from './LocalTimeCard'
-import { fadeIn } from '@/lib/motion'
 
 function WeatherIcon({ type }) {
-  if (type === 'sun') return <Sun className="h-7 w-7 text-amber-500" />
-  if (type === 'rain') return <CloudRain className="h-7 w-7 text-sky-600" />
-  return <CloudSun className="h-7 w-7 text-sky-500" />
+  if (type === 'sun') return <WbSunnyIcon sx={{ fontSize: 28, color: '#D9A441' }} />
+  return <CloudQueueIcon sx={{ fontSize: 28, color: 'primary.main' }} />
 }
 
 export default function CityWeatherCard({ cities, selected, onSelect }) {
   const city = cities[selected]
   return (
-    <Card className="p-5 sm:p-6">
-      <AnimatePresence mode="wait">
-        <motion.div key={selected} variants={fadeIn} initial="hidden" animate="show" exit="hidden" transition={{ duration: 0.18 }}>
-          <div className="flex items-start justify-between gap-4">
-            <div><p className="eyebrow">City, weather & local time</p><h3 className="mt-1 text-xl font-black text-foreground">{city.city}</h3><p className="text-sm font-semibold text-muted-foreground">{city.country} · {city.code}</p></div>
-            <div className="grid h-12 w-12 place-items-center rounded-2xl bg-muted"><WeatherIcon type={city.icon}/></div>
-          </div>
-          <div className="mt-5 grid grid-cols-2 gap-3">
-            <LocalTimeCard offsetHours={city.offsetHours} offsetLabel={city.offset} />
-            <div className="rounded-2xl bg-accent p-4">
-              <div className="flex items-center gap-2 text-accent-foreground"><Cloud className="h-4 w-4"/><span className="text-xs font-bold uppercase tracking-wide">Weather</span></div>
-              <div className="mt-2 text-3xl font-black tracking-tight text-foreground">{city.temp}°C</div>
-              <div className="mt-1 text-xs font-semibold text-muted-foreground">{city.condition}</div>
-            </div>
-          </div>
-          <div className="mt-4 flex items-center justify-between rounded-2xl border border-border px-4 py-3 text-sm">
-            <span className="font-semibold text-muted-foreground">High {city.high}° · Low {city.low}°</span>
-            <span className="flex items-center gap-1.5 font-bold text-foreground/80"><Umbrella className="h-4 w-4 text-sky-500"/>{city.rain}% rain</span>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-      <Tabs value={selected} onValueChange={onSelect} className="mt-4">
-        <TabsList className="w-full gap-1 bg-muted p-1">
-          {Object.values(cities).map(item => (
-            <TabsTrigger key={item.key} value={item.key} className="flex-1 text-xs font-bold data-active:shadow-sm">
-              {item.role}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+    <Card sx={{ p: { xs: 2.5, sm: 3 } }}>
+      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2}>
+        <Box>
+          <Typography variant="overline" sx={{ fontSize: 11, color: 'text.secondary' }}>City, weather & local time</Typography>
+          <Typography variant="h6" sx={{ mt: 0.5 }}>{city.city}</Typography>
+          <Typography sx={{ fontSize: 13, fontWeight: 600, color: 'text.secondary' }}>{city.country} · {city.code}</Typography>
+        </Box>
+        <Box sx={{ width: 48, height: 48, borderRadius: 4, bgcolor: 'action.hover', display: 'grid', placeItems: 'center' }}>
+          <WeatherIcon type={city.icon} />
+        </Box>
+      </Stack>
+
+      <Box sx={{ mt: 2.5, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5 }}>
+        <LocalTimeCard offsetHours={city.offsetHours} offsetLabel={city.offset} />
+        <Box sx={{ borderRadius: 4, bgcolor: 'primary.light', p: 2 }}>
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ color: 'primary.dark' }}>
+            <CloudQueueIcon sx={{ fontSize: 16 }} />
+            <Typography sx={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase' }}>Weather</Typography>
+          </Stack>
+          <Typography sx={{ mt: 1, fontSize: 28, fontWeight: 800 }}>{city.temp}°C</Typography>
+          <Typography sx={{ mt: 0.5, fontSize: 12, fontWeight: 600, color: 'text.secondary' }}>{city.condition}</Typography>
+        </Box>
+      </Box>
+
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ mt: 2, borderRadius: 4, border: '1px solid', borderColor: 'divider', px: 2, py: 1.5 }}
+      >
+        <Typography sx={{ fontSize: 13, fontWeight: 600, color: 'text.secondary' }}>
+          High {city.high}° · Low {city.low}°
+        </Typography>
+        <Stack direction="row" spacing={0.5} alignItems="center" sx={{ fontSize: 13, fontWeight: 700 }}>
+          <UmbrellaIcon sx={{ fontSize: 16, color: 'primary.main' }} />
+          <span>{city.rain}% rain</span>
+        </Stack>
+      </Stack>
+
+      <Tabs
+        value={selected}
+        onChange={(_e, v) => onSelect(v)}
+        variant="fullWidth"
+        sx={{ mt: 2, bgcolor: 'action.hover', borderRadius: 999, p: 0.5, minHeight: 0 }}
+        TabIndicatorProps={{ sx: { display: 'none' } }}
+      >
+        {Object.values(cities).map(item => (
+          <Tab
+            key={item.key}
+            value={item.key}
+            label={item.role}
+            sx={{ minHeight: 36, fontSize: 12, '&.Mui-selected': { bgcolor: 'background.paper', borderRadius: 999, boxShadow: '0 1px 3px rgba(20,24,31,0.12)' } }}
+          />
+        ))}
       </Tabs>
     </Card>
   )

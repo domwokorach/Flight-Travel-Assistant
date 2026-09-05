@@ -1,30 +1,50 @@
 import React from 'react'
-import { motion } from 'framer-motion'
-import { Bus, Car, Navigation, TrainFront, TramFront, CircleDollarSign, Clock3 } from 'lucide-react'
-import { Button } from '../ui/button'
-import { Card } from '../ui/card'
-import { fadeInUp } from '@/lib/motion'
+import Card from '@mui/material/Card'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+import Chip from '@mui/material/Chip'
+import Button from '@mui/material/Button'
+import TrainIcon from '@mui/icons-material/Train'
+import TramIcon from '@mui/icons-material/Tram'
+import DirectionsBusIcon from '@mui/icons-material/DirectionsBus'
+import LocalTaxiIcon from '@mui/icons-material/LocalTaxi'
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar'
+import NavigationIcon from '@mui/icons-material/Navigation'
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
+import ScheduleIcon from '@mui/icons-material/Schedule'
 
-const icons = { train: TrainFront, metro: TramFront, bus: Bus, taxi: Car, car: Car }
+const icons = { train: TrainIcon, metro: TramIcon, bus: DirectionsBusIcon, taxi: LocalTaxiIcon, car: DirectionsCarIcon }
 
 export default function TransportCard({ item }) {
-  const Icon = icons[item.kind] || Navigation
+  const Icon = icons[item.kind] || NavigationIcon
   return (
-    <motion.div variants={fadeInUp}>
-      <Card className="p-4">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex gap-3">
-            <div className="grid h-11 w-11 place-items-center rounded-2xl bg-accent text-accent-foreground"><Icon className="h-5 w-5"/></div>
-            <div><h3 className="font-black text-foreground">{item.mode}</h3><p className="mt-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400">{item.status}</p></div>
-          </div>
-          <span className="rounded-full bg-muted px-3 py-1.5 text-xs font-bold text-muted-foreground">Next {item.next}</span>
-        </div>
-        <div className="mt-4 grid grid-cols-2 gap-3 rounded-2xl bg-muted p-3">
-          <div className="flex items-center gap-2 text-sm font-bold text-foreground/80"><Clock3 className="h-4 w-4 text-muted-foreground"/>{item.time}</div>
-          <div className="flex items-center gap-2 text-sm font-bold text-foreground/80"><CircleDollarSign className="h-4 w-4 text-muted-foreground"/>{item.price}</div>
-        </div>
-        <Button variant="outline" className="mt-4 w-full"><Navigation className="h-4 w-4"/>Get directions</Button>
-      </Card>
-    </motion.div>
+    <Card sx={{ p: 2.5 }}>
+      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2}>
+        <Stack direction="row" spacing={1.5}>
+          <Box sx={{ width: 44, height: 44, borderRadius: 4, bgcolor: 'primary.light', color: 'primary.dark', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+            <Icon fontSize="small" />
+          </Box>
+          <Box>
+            <Typography sx={{ fontWeight: 800 }}>{item.mode}</Typography>
+            <Typography sx={{ mt: 0.25, fontSize: 12, fontWeight: 700, color: 'success.dark' }}>{item.status}</Typography>
+          </Box>
+        </Stack>
+        <Chip label={`Next ${item.next}`} size="small" sx={{ bgcolor: 'action.hover', color: 'text.secondary' }} />
+      </Stack>
+      <Box sx={{ mt: 2, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5, borderRadius: 4, bgcolor: 'action.hover', p: 1.5 }}>
+        <Stack direction="row" spacing={1} alignItems="center" sx={{ fontSize: 13, fontWeight: 700 }}>
+          <ScheduleIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+          <span>{item.time}</span>
+        </Stack>
+        <Stack direction="row" spacing={1} alignItems="center" sx={{ fontSize: 13, fontWeight: 700 }}>
+          <AttachMoneyIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+          <span>{item.price}</span>
+        </Stack>
+      </Box>
+      <Button variant="outlined" fullWidth startIcon={<NavigationIcon />} sx={{ mt: 2 }}>
+        Get directions
+      </Button>
+    </Card>
   )
 }

@@ -1,10 +1,14 @@
 import React from 'react'
-import { motion } from 'framer-motion'
+import Accordion from '@mui/material/Accordion'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { SectionHeading } from '../common/SectionHeading'
 import YourJourney from './YourJourney'
 import AirportServiceCard from './AirportServiceCard'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
-import { staggerContainer } from '@/lib/motion'
 
 const categories = [
   { value: 'before', title: 'Before you fly', icons: ['terminal', 'checkin', 'security', 'passport'] },
@@ -16,33 +20,43 @@ export default function AirportInfo({ services }) {
   const byIcon = Object.fromEntries(services.map(s => [s.icon, s]))
 
   return (
-    <section id="airport" className="scroll-mt-24">
+    <Box component="section" id="airport" sx={{ scrollMarginTop: 96 }}>
       <SectionHeading eyebrow="At the airport" title="Heathrow Terminal 5" />
       <YourJourney />
-      <Accordion type="multiple" defaultValue={categories.map(c => c.value)} className="space-y-3">
+      <Stack spacing={1.5}>
         {categories.map(category => {
           const items = category.icons.map(icon => byIcon[icon]).filter(Boolean)
           if (!items.length) return null
           return (
-            <AccordionItem key={category.value} value={category.value} className="rounded-3xl border border-border bg-card px-5 shadow-card">
-              <AccordionTrigger className="text-sm font-black text-foreground hover:no-underline">
-                {category.title}
-                <span className="ml-2 text-xs font-semibold text-muted-foreground">{items.length} services</span>
-              </AccordionTrigger>
-              <AccordionContent>
-                <motion.div
-                  variants={staggerContainer(0.05)}
-                  initial="hidden"
-                  animate="show"
-                  className="grid gap-3 pb-1 sm:grid-cols-2 xl:grid-cols-3"
-                >
+            <Accordion
+              key={category.value}
+              defaultExpanded
+              disableGutters
+              sx={{
+                borderRadius: 5,
+                border: '1px solid',
+                borderColor: 'divider',
+                '&:before': { display: 'none' },
+                '&.Mui-expanded': { margin: 0 },
+              }}
+            >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ px: 2.5 }}>
+                <Typography sx={{ fontWeight: 800, fontSize: 14 }}>
+                  {category.title}
+                  <Typography component="span" sx={{ ml: 1, fontSize: 12, fontWeight: 600, color: 'text.secondary' }}>
+                    {items.length} services
+                  </Typography>
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails sx={{ px: 2.5, pb: 2.5 }}>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', xl: 'repeat(3, 1fr)' }, gap: 1.5 }}>
                   {items.map(service => <AirportServiceCard key={service.title} {...service} />)}
-                </motion.div>
-              </AccordionContent>
-            </AccordionItem>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
           )
         })}
-      </Accordion>
-    </section>
+      </Stack>
+    </Box>
   )
 }

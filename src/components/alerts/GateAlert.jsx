@@ -1,56 +1,104 @@
 import React from 'react'
-import { motion } from 'framer-motion'
-import { Clock3, MapPinned, Navigation, TriangleAlert } from 'lucide-react'
-import { Button } from '../ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog'
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '../ui/drawer'
-import { useMediaQuery } from '@/hooks/useMediaQuery'
-import { urgencyMotion } from '@/lib/motion'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import Drawer from '@mui/material/Drawer'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import WarningAmberIcon from '@mui/icons-material/WarningAmber'
+import NavigationIcon from '@mui/icons-material/Navigation'
+import LocationOnIcon from '@mui/icons-material/LocationOn'
+import ScheduleIcon from '@mui/icons-material/Schedule'
+import AirlineLogo from '../flights/AirlineLogo'
+import SplitFlapText from '../board/SplitFlapText'
 
-const toneClasses = {
-  slate: 'bg-muted text-foreground',
-  sky: 'bg-primary text-primary-foreground',
-  orange: 'bg-orange-500 text-white',
-  rose: 'bg-rose-600 text-white',
+const toneColors = {
+  slate: { bg: 'action.hover', fg: 'text.primary' },
+  sky: { bg: 'primary.main', fg: 'primary.contrastText' },
+  orange: { bg: '#F0851A', fg: '#fff' },
+  rose: { bg: 'error.main', fg: '#fff' },
 }
 
 function GateAlertBody({ countdown, onDismiss }) {
   const { minutes, formatted, label, message, tone } = countdown
+  const tones = toneColors[tone] || toneColors.slate
+  const isUrgent = tone === 'orange' || tone === 'rose'
+
   return (
     <>
-      <div className={`-mx-4 -mt-4 px-5 py-4 sm:-mx-6 sm:-mt-6 ${toneClasses[tone] || toneClasses.slate}`}>
-        <div className="flex items-center gap-2"><TriangleAlert className="h-5 w-5"/><span className="text-sm font-black uppercase tracking-wide">Urgent travel alert</span></div>
-      </div>
-      <div className="pt-2">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <motion.p
-              animate={urgencyMotion[tone] || urgencyMotion.slate}
-              className="text-2xl font-black tracking-tight text-foreground"
-            >
-              {label}
-            </motion.p>
-            <p className="mt-1 text-sm font-semibold text-muted-foreground">British Airways BA117 to New York JFK</p>
-          </div>
-          <div className="rounded-2xl bg-orange-50 px-3 py-2 text-center dark:bg-orange-500/10">
-            <p className="text-[10px] font-bold uppercase tracking-wide text-orange-700 dark:text-orange-400">Closes in</p>
-            <p className="text-xl font-black tabular-nums text-orange-800 dark:text-orange-300">{formatted}</p>
-          </div>
-        </div>
-        <div className="mt-5 rounded-2xl border border-orange-200 bg-orange-50 p-4 dark:border-orange-500/20 dark:bg-orange-500/10">
-          <p className="text-lg font-black text-orange-950 dark:text-orange-200">Gate B42 closes in {minutes} minutes</p>
-          <p className="mt-1 text-sm font-semibold text-orange-800 dark:text-orange-300">{message}</p>
-        </div>
-        <div className="mt-5 grid grid-cols-2 gap-3">
-          <div className="rounded-2xl bg-muted p-4"><MapPinned className="h-4 w-4 text-muted-foreground"/><p className="metric-label mt-2">Location</p><p className="metric-value">Terminal 5 · Gate B42</p></div>
-          <div className="rounded-2xl bg-muted p-4"><Clock3 className="h-4 w-4 text-muted-foreground"/><p className="metric-label mt-2">Estimated walk</p><p className="metric-value">8 min</p></div>
-        </div>
-        <div className="mt-5 rounded-2xl bg-foreground p-4 text-background"><p className="text-xs font-bold uppercase tracking-[0.16em] opacity-70">Recommended action</p><p className="mt-1 text-lg font-black">Go to Gate Now</p></div>
-        <div className="mt-5 grid grid-cols-2 gap-3">
-          <Button className="w-full"><Navigation className="h-4 w-4"/>Get directions</Button>
-          <Button variant="outline" onClick={onDismiss} className="w-full">Dismiss</Button>
-        </div>
-      </div>
+      <Box sx={{ mx: -3, mt: -3, px: 3, py: 2, bgcolor: tones.bg, color: tones.fg, borderTopLeftRadius: 'inherit', borderTopRightRadius: 'inherit' }}>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <WarningAmberIcon fontSize="small" />
+          <Typography sx={{ fontSize: 13, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            Urgent travel alert
+          </Typography>
+        </Stack>
+      </Box>
+      <Box sx={{ pt: 2.5 }}>
+        <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2}>
+          <Stack direction="row" spacing={1.5} alignItems="flex-start">
+            <AirlineLogo airlineName="British Airways" airlineCode="BA" size="sm" />
+            <Box>
+              <Typography
+                variant="h5"
+                component="p"
+                sx={{
+                  fontSize: 24,
+                  ...(isUrgent && {
+                    animation: tone === 'rose' ? 'gateShakeStrong 0.9s ease-in-out infinite' : 'gateShake 1.6s ease-in-out infinite',
+                  }),
+                  '@keyframes gateShake': { '0%, 100%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.015)' } },
+                  '@keyframes gateShakeStrong': { '0%, 100%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.035)' } },
+                }}
+              >
+                {label}
+              </Typography>
+              <Typography sx={{ mt: 0.5, fontSize: 14, fontWeight: 600, color: 'text.secondary' }}>
+                British Airways BA117 to New York JFK
+              </Typography>
+            </Box>
+          </Stack>
+          <Box sx={{ borderRadius: 4, bgcolor: '#FDECDD', px: 2, py: 1.5, textAlign: 'center', minWidth: 90 }}>
+            <Typography sx={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', color: '#B4530A' }}>Closes in</Typography>
+            <Typography sx={{ fontSize: 22, fontWeight: 800, color: '#8A3D08', fontVariantNumeric: 'tabular-nums' }}>{formatted}</Typography>
+          </Box>
+        </Stack>
+
+        <Box sx={{ mt: 2.5, borderRadius: 4, border: '1px solid #F3C994', bgcolor: '#FDECDD', p: 2 }}>
+          <Typography sx={{ fontSize: 17, fontWeight: 800, color: '#7C3E07' }}>Gate B42 closes in {minutes} minutes</Typography>
+          <Typography sx={{ mt: 0.5, fontSize: 13, fontWeight: 600, color: '#8A5A05' }}>{message}</Typography>
+        </Box>
+
+        <Box sx={{ mt: 2.5, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5 }}>
+          <Box sx={{ borderRadius: 4, bgcolor: 'action.hover', p: 2 }}>
+            <LocationOnIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+            <Typography variant="overline" sx={{ display: 'block', mt: 1, fontSize: 11, color: 'text.secondary' }}>Location</Typography>
+            <SplitFlapText value="TERMINAL 5 · GATE B42" sx={{ mt: 0.5, fontSize: 13, fontWeight: 700 }} />
+          </Box>
+          <Box sx={{ borderRadius: 4, bgcolor: 'action.hover', p: 2 }}>
+            <ScheduleIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+            <Typography variant="overline" sx={{ display: 'block', mt: 1, fontSize: 11, color: 'text.secondary' }}>Estimated walk</Typography>
+            <Typography sx={{ mt: 0.5, fontSize: 14, fontWeight: 700 }}>8 min</Typography>
+          </Box>
+        </Box>
+
+        <Box sx={{ mt: 2.5, borderRadius: 4, bgcolor: 'text.primary', color: 'background.paper', p: 2 }}>
+          <Typography sx={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.7 }}>
+            Recommended action
+          </Typography>
+          <Typography sx={{ mt: 0.5, fontSize: 17, fontWeight: 800 }}>Go to Gate Now</Typography>
+        </Box>
+
+        <Stack direction="row" spacing={1.5} sx={{ mt: 2.5 }}>
+          <Button variant="contained" fullWidth startIcon={<NavigationIcon />} sx={{ minHeight: 44 }}>
+            Get directions
+          </Button>
+          <Button variant="outlined" fullWidth onClick={onDismiss} sx={{ minHeight: 44 }}>
+            Dismiss
+          </Button>
+        </Stack>
+      </Box>
     </>
   )
 }
@@ -61,29 +109,34 @@ export default function GateAlert({ countdown, open, onOpenChange }) {
 
   if (isDesktop) {
     return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader className="sr-only">
-            <DialogTitle>Urgent travel alert</DialogTitle>
-            <DialogDescription>Gate closing countdown for BA117</DialogDescription>
-          </DialogHeader>
-          <GateAlertBody countdown={countdown} onDismiss={dismiss} />
-        </DialogContent>
+      <Dialog
+        open={open}
+        onClose={dismiss}
+        maxWidth="sm"
+        fullWidth
+        aria-labelledby="gate-alert-title"
+        PaperProps={{ sx: { p: 3 } }}
+      >
+        <Typography id="gate-alert-title" sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
+          Urgent travel alert: gate closing countdown for BA117
+        </Typography>
+        <GateAlertBody countdown={countdown} onDismiss={dismiss} />
       </Dialog>
     )
   }
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent>
-        <DrawerHeader className="sr-only">
-          <DrawerTitle>Urgent travel alert</DrawerTitle>
-          <DrawerDescription>Gate closing countdown for BA117</DrawerDescription>
-        </DrawerHeader>
-        <div className="px-4 pb-6">
-          <GateAlertBody countdown={countdown} onDismiss={dismiss} />
-        </div>
-      </DrawerContent>
+    <Drawer
+      anchor="bottom"
+      open={open}
+      onClose={dismiss}
+      PaperProps={{ sx: { p: 3, pb: 4 } }}
+    >
+      <Typography sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
+        Urgent travel alert: gate closing countdown for BA117
+      </Typography>
+      <Box sx={{ width: 40, height: 4, borderRadius: 999, bgcolor: 'divider', mx: 'auto', mb: 2 }} />
+      <GateAlertBody countdown={countdown} onDismiss={dismiss} />
     </Drawer>
   )
 }

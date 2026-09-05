@@ -35,6 +35,27 @@ export const flights = [
     boarding: '—', gateCloses: '—', duration: '1h 35m', status: 'Cancelled', note: 'Contact airline for rebooking',
   },
   {
+    id: 'vs103', type: 'departure', airline: 'Virgin Atlantic', airlineMark: 'VS', flightNumber: 'VS103',
+    from: { city: 'London', code: 'LHR', terminal: '3', gate: '17' },
+    to: { city: 'New York', code: 'JFK', terminal: '4', gate: '—' },
+    scheduledDeparture: '19:15', actualDeparture: '19:15', scheduledArrival: '22:05', actualArrival: '22:05',
+    boarding: '18:35', gateCloses: '19:00', duration: '7h 50m', status: 'On Time', note: 'Gate opens 18:25',
+  },
+  {
+    id: 'ek007', type: 'departure', airline: 'Emirates', airlineMark: 'EK', flightNumber: 'EK007',
+    from: { city: 'London', code: 'LHR', terminal: '3', gate: '9' },
+    to: { city: 'Dubai', code: 'DXB', terminal: '3', gate: '—' },
+    scheduledDeparture: '20:40', actualDeparture: '20:40', scheduledArrival: '07:35', actualArrival: '07:35',
+    boarding: '19:55', gateCloses: '20:20', duration: '6h 55m', status: 'On Time', note: 'Gate opens 19:45',
+  },
+  {
+    id: 'u28471', type: 'departure', airline: 'easyJet', airlineMark: 'U2', flightNumber: 'U28471',
+    from: { city: 'London', code: 'LGW', terminal: '1', gate: '54' },
+    to: { city: 'Paris', code: 'CDG', terminal: '1', gate: '—' },
+    scheduledDeparture: '21:10', actualDeparture: '21:10', scheduledArrival: '23:25', actualArrival: '23:25',
+    boarding: '20:35', gateCloses: '20:55', duration: '1h 15m', status: 'Gate Open', note: 'Boarding begins shortly',
+  },
+  {
     id: 'ba178', type: 'arrival', airline: 'British Airways', airlineMark: 'BA', flightNumber: 'BA178',
     from: { city: 'New York', code: 'JFK', terminal: '8', gate: '7' },
     to: { city: 'London', code: 'LHR', terminal: '5', gate: 'C61' },
@@ -47,6 +68,27 @@ export const flights = [
     to: { city: 'London', code: 'LHR', terminal: '4', gate: '14' },
     scheduledDeparture: '12:45', actualDeparture: '12:48', scheduledArrival: '13:10', actualArrival: '13:08',
     boarding: '12:10', gateCloses: '12:30', duration: '1h 20m', status: 'Arrived', note: 'Arrived 2 min early',
+  },
+  {
+    id: 'b614', type: 'arrival', airline: 'JetBlue', airlineMark: 'B6', flightNumber: 'B614',
+    from: { city: 'New York', code: 'JFK', terminal: '7', gate: '4' },
+    to: { city: 'London', code: 'LHR', terminal: '3', gate: '11' },
+    scheduledDeparture: '21:50', actualDeparture: '21:58', scheduledArrival: '09:40', actualArrival: '09:36',
+    boarding: '21:10', gateCloses: '21:30', duration: '6h 50m', status: 'Arrived', note: 'Arrived 4 min early',
+  },
+  {
+    id: 'tk1979', type: 'arrival', airline: 'Turkish Airlines', airlineMark: 'TK', flightNumber: 'TK1979',
+    from: { city: 'Istanbul', code: 'IST', terminal: '1', gate: 'D6' },
+    to: { city: 'London', code: 'LHR', terminal: '2', gate: '9' },
+    scheduledDeparture: '10:20', actualDeparture: '11:05', scheduledArrival: '13:00', actualArrival: '13:42',
+    boarding: '09:45', gateCloses: '10:05', duration: '4h 20m', status: 'Delayed', note: '42 min delay · air traffic control',
+  },
+  {
+    id: 'qf9', type: 'arrival', airline: 'Qantas', airlineMark: 'QF', flightNumber: 'QF9',
+    from: { city: 'Perth', code: 'PER', terminal: '1', gate: '12' },
+    to: { city: 'London', code: 'LHR', terminal: '3', gate: '22' },
+    scheduledDeparture: '19:40', actualDeparture: '19:40', scheduledArrival: '05:25', actualArrival: '05:25',
+    boarding: '19:00', gateCloses: '19:20', duration: '17h 15m', status: 'On Time', note: 'Nonstop Perth–London',
   },
 ]
 

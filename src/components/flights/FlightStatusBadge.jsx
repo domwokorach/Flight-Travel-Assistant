@@ -1,24 +1,60 @@
 import React from 'react'
-import { Badge } from '../ui/badge'
-import { cn } from '@/lib/utils'
+import Chip from '@mui/material/Chip'
+import Box from '@mui/material/Box'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff'
+import DoorFrontIcon from '@mui/icons-material/MeetingRoom'
+import WarningAmberIcon from '@mui/icons-material/WarningAmber'
+import ScheduleIcon from '@mui/icons-material/Schedule'
+import FlightLandIcon from '@mui/icons-material/FlightLand'
+import CancelIcon from '@mui/icons-material/Cancel'
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz'
 
 const styles = {
-  'On Time': 'border-transparent bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
-  Boarding: 'border-transparent bg-sky-50 text-sky-700 dark:bg-sky-500/15 dark:text-sky-400',
-  'Gate Open': 'border-transparent bg-cyan-50 text-cyan-700 dark:bg-cyan-500/15 dark:text-cyan-400',
-  'Gate Closing': 'border-transparent bg-orange-50 text-orange-700 dark:bg-orange-500/15 dark:text-orange-400',
-  Delayed: 'border-transparent bg-amber-50 text-amber-800 dark:bg-amber-500/15 dark:text-amber-400',
-  Departed: 'border-transparent bg-indigo-50 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-400',
-  Arrived: 'border-transparent bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
-  Cancelled: 'border-transparent bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-400',
-  'Gate Change': 'border-transparent bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400',
+  'On Time': { bg: '#E4F6EC', fg: '#0B7A44', icon: CheckCircleIcon },
+  Boarding: { bg: '#E1F1FC', fg: '#0B5FA5', icon: FlightTakeoffIcon },
+  'Gate Open': { bg: '#E0F7FA', fg: '#0F7C8A', icon: DoorFrontIcon },
+  'Gate Closing': { bg: '#FDECDD', fg: '#B4530A', icon: WarningAmberIcon },
+  Delayed: { bg: '#FDF2D8', fg: '#8A5A05', icon: ScheduleIcon },
+  Departed: { bg: '#E8E7FB', fg: '#463FAE', icon: FlightTakeoffIcon },
+  Arrived: { bg: '#E4F6EC', fg: '#0B7A44', icon: FlightLandIcon },
+  Cancelled: { bg: '#FBE7E9', fg: '#8F1F2C', icon: CancelIcon },
+  'Gate Change': { bg: '#EFE6FB', fg: '#5B2D9E', icon: SwapHorizIcon },
 }
 
 export default function FlightStatusBadge({ status, pulse = false }) {
+  const style = styles[status] || { bg: 'action.hover', fg: 'text.secondary', icon: ScheduleIcon }
+  const Icon = style.icon
   return (
-    <Badge className={cn('h-auto rounded-full px-3 py-1.5 text-xs font-bold', styles[status] || 'border-border bg-muted text-muted-foreground')}>
-      {pulse && <span className="h-1.5 w-1.5 rounded-full bg-current motion-safe:animate-pulse" />}
-      {status}
-    </Badge>
+    <Chip
+      size="small"
+      icon={
+        pulse ? (
+          <Box
+            component="span"
+            sx={{
+              width: 8,
+              height: 8,
+              borderRadius: '50%',
+              bgcolor: style.fg,
+              animation: 'statusPulse 1.6s ease-in-out infinite',
+              '@keyframes statusPulse': {
+                '0%, 100%': { opacity: 1 },
+                '50%': { opacity: 0.35 },
+              },
+            }}
+          />
+        ) : (
+          <Icon sx={{ fontSize: 16, color: `${style.fg} !important` }} />
+        )
+      }
+      label={status}
+      sx={{
+        bgcolor: style.bg,
+        color: style.fg,
+        fontWeight: 700,
+        '& .MuiChip-icon': { ml: '10px' },
+      }}
+    />
   )
 }

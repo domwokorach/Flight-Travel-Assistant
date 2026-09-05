@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import Box from '@mui/material/Box'
 import AirportInfo from '../components/airport/AirportInfo'
 import { getAirportServices } from '../services/airportService'
 
@@ -10,8 +11,8 @@ export default function AirportPage() {
   }, [])
 
   return (
-    <div className="mt-10">
+    <Box sx={{ mt: 5 }}>
       <AirportInfo services={services} />
-    </div>
+    </Box>
   )
 }

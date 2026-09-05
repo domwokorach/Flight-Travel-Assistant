@@ -1,63 +1,159 @@
 import React from 'react'
-import { motion } from 'framer-motion'
-import { ArrowRight, Clock3, Footprints, Plane, Timer, TriangleAlert } from 'lucide-react'
+import Card from '@mui/material/Card'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import Stepper from '@mui/material/Stepper'
+import Step from '@mui/material/Step'
+import StepLabel from '@mui/material/StepLabel'
+import StepConnector from '@mui/material/StepConnector'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import WarningAmberIcon from '@mui/icons-material/WarningAmber'
+import FlightIcon from '@mui/icons-material/Flight'
+import ScheduleIcon from '@mui/icons-material/Schedule'
+import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk'
+import TimerIcon from '@mui/icons-material/Timer'
 import FlightStatusBadge from './FlightStatusBadge'
-import { Button } from '../ui/button'
-import { Card } from '../ui/card'
-import { fadeInUp, smooth, staggerContainer } from '@/lib/motion'
+import AirlineLogo from './AirlineLogo'
+import SplitFlapText from '../board/SplitFlapText'
 
-const urgencyClasses = {
-  urgent: 'border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-400',
-  limited: 'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400',
-  comfortable: 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400',
+function codeFromFlightNumber(flightNumber) {
+  return flightNumber?.match(/^[A-Z]{2}/)?.[0]
+}
+
+const urgencyStyles = {
+  urgent: { bg: '#FBE7E9', fg: '#8F1F2C', border: '#F3C3C8' },
+  limited: { bg: '#FDF2D8', fg: '#8A5A05', border: '#F3DFA6' },
+  comfortable: { bg: '#E4F6EC', fg: '#0B7A44', border: '#BFE7D1' },
+}
+
+function FlightLeg({ eyebrow, flight, arriveOrDepart, arriveOrDepartLabel, cityFrom, cityTo }) {
+  return (
+    <Box sx={{ borderRadius: 4, border: '1px solid', borderColor: 'divider', p: 2.5 }}>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+        <Stack direction="row" spacing={1.5} alignItems="center">
+          <AirlineLogo size="sm" airlineName={flight.airline} airlineCode={codeFromFlightNumber(flight.flightNumber)} />
+          <Box>
+            <Typography variant="overline" sx={{ fontSize: 11, color: 'text.secondary' }}>{eyebrow}</Typography>
+            <Typography sx={{ fontWeight: 800, fontSize: 14 }}>{flight.flightNumber} · {flight.airline}</Typography>
+          </Box>
+        </Stack>
+        <FlightStatusBadge status={flight.status} />
+      </Stack>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mt: 2.5 }}>
+        <Box>
+          <SplitFlapText value={flight.from} sx={{ fontSize: 24 }} />
+          <Typography sx={{ fontSize: 12, fontWeight: 600, color: 'text.secondary' }}>{cityFrom}</Typography>
+        </Box>
+        <FlightIcon sx={{ fontSize: 20, color: 'primary.main', transform: 'rotate(90deg)' }} />
+        <Box sx={{ textAlign: 'right' }}>
+          <SplitFlapText value={flight.to} sx={{ fontSize: 24, justifyContent: 'flex-end' }} />
+          <Typography sx={{ fontSize: 12, fontWeight: 600, color: 'text.secondary' }}>{cityTo}</Typography>
+        </Box>
+      </Stack>
+      <Typography sx={{ mt: 2, fontSize: 13, fontWeight: 600, color: 'text.secondary' }}>
+        {arriveOrDepartLabel}: Terminal {flight.terminal} · Gate {flight.gate}
+      </Typography>
+    </Box>
+  )
 }
 
 export default function ConnectionCard({ journey }) {
+  const isMobile = useMediaQuery('(max-width: 899px)')
+  const urgency = urgencyStyles[journey.urgency] || urgencyStyles.comfortable
+
   return (
-    <motion.div variants={fadeInUp} initial="hidden" animate="show" transition={smooth}>
-      <Card className="overflow-hidden">
-        <div className={`border-b px-5 py-4 ${urgencyClasses[journey.urgency] || urgencyClasses.comfortable}`}>
-          <div className="flex flex-wrap items-center justify-between gap-3"><div className="flex items-center gap-2"><TriangleAlert className="h-5 w-5"/><span className="font-black">{journey.connectionStatus}</span></div><span className="text-sm font-bold">Layover {journey.layover}</span></div>
-        </div>
-        <div className="p-5 sm:p-6">
-          <div className="mb-6 flex items-baseline gap-2 text-foreground"><span className="text-3xl font-black">LHR</span><ArrowRight className="h-5 w-5 text-muted-foreground"/><span className="text-3xl font-black">AMS</span><ArrowRight className="h-5 w-5 text-muted-foreground"/><span className="text-3xl font-black">JFK</span></div>
+    <Card sx={{ overflow: 'hidden' }}>
+      <Box sx={{ borderBottom: '1px solid', borderColor: urgency.border, bgcolor: urgency.bg, color: urgency.fg, px: 2.5, py: 2 }}>
+        <Stack direction="row" flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={1.5}>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <WarningAmberIcon fontSize="small" />
+            <Typography sx={{ fontWeight: 800 }}>{journey.connectionStatus}</Typography>
+          </Stack>
+          <Typography sx={{ fontWeight: 700, fontSize: 14 }}>Layover {journey.layover}</Typography>
+        </Stack>
+      </Box>
 
-          <motion.div
-            variants={staggerContainer(0.12)}
-            initial="hidden"
-            animate="show"
-            className="relative grid gap-5 md:grid-cols-[1fr_120px_1fr] md:items-center"
-          >
-            <motion.div variants={fadeInUp} className="rounded-2xl border border-border p-4">
-              <div className="flex items-center justify-between gap-3"><div><p className="eyebrow">Current flight</p><p className="mt-1 font-black">{journey.currentFlight.flightNumber} · {journey.currentFlight.airline}</p></div><FlightStatusBadge status={journey.currentFlight.status}/></div>
-              <div className="mt-4 flex items-center justify-between"><div><p className="text-2xl font-black">{journey.currentFlight.from}</p><p className="text-xs font-semibold text-muted-foreground">London</p></div><Plane className="h-5 w-5 rotate-90 text-primary"/><div className="text-right"><p className="text-2xl font-black">{journey.currentFlight.to}</p><p className="text-xs font-semibold text-muted-foreground">Arrive {journey.currentFlight.arrival}</p></div></div>
-              <p className="mt-4 text-sm font-semibold text-muted-foreground">Arrival: Terminal {journey.currentFlight.terminal} · Gate {journey.currentFlight.gate}</p>
-            </motion.div>
+      <Box sx={{ p: { xs: 2.5, sm: 3 } }}>
+        <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 3, overflow: 'hidden', borderRadius: 4, bgcolor: 'board.bg', px: 2, py: 1.5 }}>
+          {journey.route.map((code, i) => (
+            <React.Fragment key={code}>
+              {i > 0 && <ArrowForwardIcon sx={{ fontSize: 16, color: 'rgba(255,255,255,0.3)' }} />}
+              <SplitFlapText value={code} sx={{ fontSize: { xs: 22, sm: 26 }, color: 'board.text' }} />
+            </React.Fragment>
+          ))}
+        </Stack>
 
-            <motion.div variants={fadeInUp} className="relative flex items-center gap-3 md:block md:text-center">
-              <div className="absolute left-4 top-0 h-full w-px bg-border md:left-0 md:top-4 md:h-px md:w-full"/>
-              <div className="relative z-10 grid h-8 w-8 place-items-center rounded-full bg-foreground text-background md:mx-auto">
-                <span className="text-xs font-black">AMS</span>
-              </div>
-              <div className="relative z-10 bg-card md:mt-2"><p className="text-xs font-black text-foreground">Amsterdam</p><p className="text-[11px] font-semibold text-muted-foreground">Connection</p></div>
-            </motion.div>
+        <Stepper
+          orientation={isMobile ? 'vertical' : 'horizontal'}
+          alternativeLabel={!isMobile}
+          activeStep={-1}
+          connector={<StepConnector sx={{ '& .MuiStepConnector-line': { borderColor: 'divider' } }} />}
+          sx={{ mb: 3 }}
+        >
+          <Step>
+            <StepLabel StepIconComponent={() => null}>
+              <FlightLeg
+                eyebrow="Current flight"
+                flight={journey.currentFlight}
+                arriveOrDepartLabel="Arrival"
+                cityFrom="London"
+                cityTo={`Arrive ${journey.currentFlight.arrival}`}
+              />
+            </StepLabel>
+          </Step>
+          <Step>
+            <StepLabel
+              StepIconComponent={() => (
+                <Box sx={{ width: 32, height: 32, borderRadius: '50%', bgcolor: 'text.primary', color: 'background.paper', display: 'grid', placeItems: 'center' }}>
+                  <Typography sx={{ fontSize: 11, fontWeight: 800 }}>AMS</Typography>
+                </Box>
+              )}
+            >
+              <Typography sx={{ fontWeight: 800, fontSize: 13 }}>Amsterdam</Typography>
+              <Typography sx={{ fontSize: 11, fontWeight: 600, color: 'text.secondary' }}>Connection</Typography>
+            </StepLabel>
+          </Step>
+          <Step>
+            <StepLabel StepIconComponent={() => null}>
+              <FlightLeg
+                eyebrow="Connecting flight"
+                flight={journey.nextFlight}
+                arriveOrDepartLabel="Departure"
+                cityFrom="Amsterdam"
+                cityTo={`Depart ${journey.nextFlight.departure}`}
+              />
+            </StepLabel>
+          </Step>
+        </Stepper>
 
-            <motion.div variants={fadeInUp} className="rounded-2xl border border-border p-4">
-              <div className="flex items-center justify-between gap-3"><div><p className="eyebrow">Connecting flight</p><p className="mt-1 font-black">{journey.nextFlight.flightNumber} · {journey.nextFlight.airline}</p></div><FlightStatusBadge status={journey.nextFlight.status}/></div>
-              <div className="mt-4 flex items-center justify-between"><div><p className="text-2xl font-black">{journey.nextFlight.from}</p><p className="text-xs font-semibold text-muted-foreground">Amsterdam</p></div><Plane className="h-5 w-5 rotate-90 text-primary"/><div className="text-right"><p className="text-2xl font-black">{journey.nextFlight.to}</p><p className="text-xs font-semibold text-muted-foreground">Depart {journey.nextFlight.departure}</p></div></div>
-              <p className="mt-4 text-sm font-semibold text-muted-foreground">Departure: Terminal {journey.nextFlight.terminal} · Gate {journey.nextFlight.gate}</p>
-            </motion.div>
-          </motion.div>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }, gap: 1.5 }}>
+          <Box sx={{ borderRadius: 4, bgcolor: 'action.hover', p: 1.75 }}>
+            <ScheduleIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+            <Typography variant="overline" sx={{ display: 'block', mt: 1, fontSize: 11, color: 'text.secondary' }}>Layover</Typography>
+            <Typography sx={{ fontWeight: 700, fontSize: 14 }}>{journey.layover}</Typography>
+          </Box>
+          <Box sx={{ borderRadius: 4, bgcolor: 'action.hover', p: 1.75 }}>
+            <DirectionsWalkIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+            <Typography variant="overline" sx={{ display: 'block', mt: 1, fontSize: 11, color: 'text.secondary' }}>Gate transit</Typography>
+            <Typography sx={{ fontWeight: 700, fontSize: 14 }}>{journey.walkTime}</Typography>
+          </Box>
+          <Box sx={{ borderRadius: 4, bgcolor: 'action.hover', p: 1.75 }}>
+            <TimerIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+            <Typography variant="overline" sx={{ display: 'block', mt: 1, fontSize: 11, color: 'text.secondary' }}>Boarding</Typography>
+            <SplitFlapText value={journey.nextFlight.boarding} sx={{ mt: 0.5, fontSize: 14, fontWeight: 700 }} />
+          </Box>
+          <Box sx={{ borderRadius: 4, bgcolor: '#FDF2D8', p: 1.75 }}>
+            <WarningAmberIcon sx={{ fontSize: 18, color: '#8A5A05' }} />
+            <Typography variant="overline" sx={{ display: 'block', mt: 1, fontSize: 11, color: '#8A5A05' }}>Gate closes</Typography>
+            <SplitFlapText value={journey.boardingDeadline} sx={{ mt: 0.5, fontSize: 14, fontWeight: 700, color: '#8A5A05' }} />
+          </Box>
+        </Box>
 
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <div className="rounded-2xl bg-muted p-3"><Clock3 className="h-4 w-4 text-muted-foreground"/><p className="metric-label mt-2">Layover</p><p className="metric-value">{journey.layover}</p></div>
-            <div className="rounded-2xl bg-muted p-3"><Footprints className="h-4 w-4 text-muted-foreground"/><p className="metric-label mt-2">Gate transit</p><p className="metric-value">{journey.walkTime}</p></div>
-            <div className="rounded-2xl bg-muted p-3"><Timer className="h-4 w-4 text-muted-foreground"/><p className="metric-label mt-2">Boarding</p><p className="metric-value">{journey.nextFlight.boarding}</p></div>
-            <div className="rounded-2xl bg-amber-50 p-3 dark:bg-amber-500/10"><TriangleAlert className="h-4 w-4 text-amber-600 dark:text-amber-400"/><p className="metric-label mt-2">Gate closes</p><p className="metric-value text-amber-800 dark:text-amber-400">{journey.boardingDeadline}</p></div>
-          </div>
-          <Button className="mt-5 w-full sm:w-auto">Show connection route</Button>
-        </div>
-      </Card>
-    </motion.div>
+        <Button variant="contained" sx={{ mt: 3, width: { xs: '100%', sm: 'auto' } }}>Show connection route</Button>
+      </Box>
+    </Card>
   )
 }

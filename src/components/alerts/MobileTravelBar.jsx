@@ -1,30 +1,67 @@
 import React from 'react'
-import { motion } from 'framer-motion'
-import { Map, Navigation } from 'lucide-react'
-import { Button } from '../ui/button'
-import { urgencyMotion } from '@/lib/motion'
+import Paper from '@mui/material/Paper'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import NavigationIcon from '@mui/icons-material/Navigation'
+import MapIcon from '@mui/icons-material/Map'
 
 export default function MobileTravelBar({ countdown, onAlert }) {
   const { formatted, tone } = countdown
+  const isUrgent = tone === 'orange' || tone === 'rose'
+
   return (
-    <motion.div
-      initial={{ y: 80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ delay: 0.3, ...{ type: 'spring', stiffness: 300, damping: 30 } }}
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card/95 p-2 shadow-[0_-10px_30px_rgba(15,23,42,.10)] backdrop-blur md:hidden"
+    <Paper
+      elevation={0}
+      sx={{
+        display: { xs: 'block', md: 'none' },
+        position: 'fixed',
+        insetInline: 0,
+        bottom: 0,
+        zIndex: 30,
+        borderTop: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 0,
+        p: 1,
+        boxShadow: '0 -10px 30px rgba(20,24,31,0.10)',
+      }}
     >
-      <div className="mx-auto grid max-w-lg grid-cols-[1fr_auto_auto] items-center gap-2">
-        <motion.button
+      <Box sx={{ mx: 'auto', maxWidth: 480, display: 'grid', gridTemplateColumns: '1fr auto auto', alignItems: 'center', gap: 1 }}>
+        <Box
+          component="button"
+          type="button"
           onClick={onAlert}
-          animate={urgencyMotion[tone] || urgencyMotion.slate}
-          className="min-w-0 rounded-xl bg-orange-50 px-3 py-2 text-left dark:bg-orange-500/10"
+          sx={{
+            minWidth: 0,
+            textAlign: 'left',
+            borderRadius: 3,
+            bgcolor: '#FDECDD',
+            px: 1.5,
+            py: 1,
+            border: 'none',
+            cursor: 'pointer',
+            minHeight: 44,
+            ...(isUrgent && {
+              animation: 'travelBarPulse 1.6s ease-in-out infinite',
+              '@keyframes travelBarPulse': { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.75 } },
+            }),
+          }}
         >
-          <p className="truncate text-[10px] font-black uppercase tracking-wide text-orange-700 dark:text-orange-400">BA117 · Boarding</p>
-          <p className="truncate text-sm font-black text-foreground">Gate B42 · closes {formatted}</p>
-        </motion.button>
-        <Button className="px-3"><Navigation className="h-4 w-4"/><span className="hidden min-[390px]:inline">Directions</span></Button>
-        <Button variant="outline" className="px-3" aria-label="Airport map"><Map className="h-4 w-4"/></Button>
-      </div>
-    </motion.div>
+          <Typography noWrap sx={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', color: '#B4530A' }}>
+            BA117 · Boarding
+          </Typography>
+          <Typography noWrap sx={{ fontSize: 14, fontWeight: 800, fontVariantNumeric: 'tabular-nums' }}>
+            Gate B42 · closes {formatted}
+          </Typography>
+        </Box>
+        <Button variant="contained" startIcon={<NavigationIcon />} sx={{ px: 1.5, minHeight: 44 }}>
+          <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Directions</Box>
+        </Button>
+        <IconButton aria-label="Airport map" sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 3, width: 44, height: 44 }}>
+          <MapIcon fontSize="small" />
+        </IconButton>
+      </Box>
+    </Paper>
   )
 }

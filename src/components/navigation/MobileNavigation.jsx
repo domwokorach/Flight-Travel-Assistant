@@ -1,52 +1,61 @@
-import React from 'react'
-import { Menu, Plane, X } from 'lucide-react'
-import { Button } from '../ui/button'
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '../ui/sheet'
+import React, { useState } from 'react'
+import Drawer from '@mui/material/Drawer'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import List from '@mui/material/List'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemText from '@mui/material/ListItemText'
+import MenuIcon from '@mui/icons-material/Menu'
+import CloseIcon from '@mui/icons-material/Close'
+import FlightIcon from '@mui/icons-material/Flight'
 
 export default function MobileNavigation({ items }) {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Open navigation" className="text-slate-200 hover:bg-white/10 hover:text-white md:hidden">
-          <Menu className="h-5 w-5" />
-        </Button>
-      </SheetTrigger>
-      <SheetContent side="right" showCloseButton={false} className="border-l border-white/10 bg-slate-950 text-white">
-        <SheetHeader>
-          <SheetTitle className="flex items-center gap-2 text-white">
-            <span className="grid h-8 w-8 place-items-center rounded-xl bg-sky-500 shadow-lg shadow-sky-500/20">
-              <Plane className="h-4 w-4 -rotate-12" />
-            </span>
-            FlightPath
-          </SheetTitle>
-        </SheetHeader>
-        <SheetClose asChild>
-          <Button variant="ghost" size="icon-sm" aria-label="Close navigation" className="absolute top-3 right-3 text-slate-300 hover:bg-white/10 hover:text-white">
-            <X className="h-4 w-4" />
-          </Button>
-        </SheetClose>
-        <nav className="flex flex-col gap-1 px-4" aria-label="Mobile navigation">
+    <>
+      <IconButton
+        aria-label="Open navigation"
+        onClick={() => setOpen(true)}
+        sx={{ display: { xs: 'inline-flex', md: 'none' }, color: 'rgba(255,255,255,0.85)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}
+      >
+        <MenuIcon />
+      </IconButton>
+      <Drawer
+        anchor="right"
+        open={open}
+        onClose={() => setOpen(false)}
+        PaperProps={{ sx: { bgcolor: '#0F172A', color: '#fff', width: 280, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } }}
+      >
+        <Box sx={{ p: 2.5 }}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Stack direction="row" spacing={1.5} alignItems="center">
+              <Box sx={{ width: 32, height: 32, borderRadius: 3, bgcolor: '#38BDF8', display: 'grid', placeItems: 'center' }}>
+                <FlightIcon sx={{ fontSize: 16, transform: 'rotate(-12deg)' }} />
+              </Box>
+              <Typography sx={{ fontWeight: 800 }}>FlightPath</Typography>
+            </Stack>
+            <IconButton aria-label="Close navigation" onClick={() => setOpen(false)} sx={{ color: 'rgba(255,255,255,0.8)' }}>
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </Stack>
+        </Box>
+        <List component="nav" aria-label="Mobile navigation" sx={{ px: 1 }}>
           {items.map(([label, href]) => (
-            <a
+            <ListItemButton
               key={href}
+              component="a"
               href={href}
               onClick={() => setOpen(false)}
-              className="rounded-xl px-3 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10"
+              sx={{ borderRadius: 3, mx: 1, minHeight: 44, '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}
             >
-              {label}
-            </a>
+              <ListItemText primaryTypographyProps={{ sx: { fontWeight: 700, fontSize: 14 } }}>{label}</ListItemText>
+            </ListItemButton>
           ))}
-        </nav>
-      </SheetContent>
-    </Sheet>
+        </List>
+      </Drawer>
+    </>
   )
 }

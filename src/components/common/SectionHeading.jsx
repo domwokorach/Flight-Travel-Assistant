@@ -1,13 +1,26 @@
 import React from 'react'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 
 export function SectionHeading({ eyebrow, title, action }) {
   return (
-    <div className="mb-5 flex items-end justify-between gap-4">
-      <div>
-        <p className="eyebrow">{eyebrow}</p>
-        <h2 className="mt-1 text-xl font-bold tracking-tight text-foreground sm:text-2xl">{title}</h2>
-      </div>
+    <Stack direction="row" alignItems="flex-end" justifyContent="space-between" spacing={2} flexWrap="wrap" sx={{ mb: 2.5, rowGap: 1.5 }}>
+      <Box>
+        {eyebrow ? (
+          <Typography
+            component="p"
+            variant="overline"
+            sx={{ color: 'text.secondary', fontSize: 11, lineHeight: 1.4 }}
+          >
+            {eyebrow}
+          </Typography>
+        ) : null}
+        <Typography variant="h5" component="h2" sx={{ mt: 0.5 }}>
+          {title}
+        </Typography>
+      </Box>
       {action}
-    </div>
+    </Stack>
   )
 }

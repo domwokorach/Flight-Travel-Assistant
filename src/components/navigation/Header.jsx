@@ -1,9 +1,15 @@
 import React from 'react'
-import { Command, Plane } from 'lucide-react'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
+import FlightIcon from '@mui/icons-material/Flight'
+import SearchIcon from '@mui/icons-material/Search'
 import MobileNavigation from './MobileNavigation'
-import ThemeToggle from './ThemeToggle'
-import { Button } from '../ui/button'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 
 const nav = [
   ['Flights', '#flights'],
@@ -13,43 +19,69 @@ const nav = [
 
 export default function Header({ onOpenCommandMenu }) {
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/95 text-white backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-        <a href="#top" className="flex items-center gap-3" aria-label="FlightPath home">
-          <span className="grid h-10 w-10 place-items-center rounded-2xl bg-sky-500 shadow-lg shadow-sky-500/20"><Plane className="h-5 w-5 -rotate-12" /></span>
-          <span><span className="block text-sm font-black tracking-tight">FlightPath</span><span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">Travel assistant</span></span>
-        </a>
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
-          {nav.map(([label, href]) => <a key={href} href={href} className="rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white">{label}</a>)}
-        </nav>
-        <div className="flex items-center gap-1">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                onClick={onOpenCommandMenu}
-                className="hidden items-center gap-2 text-slate-300 hover:bg-white/10 hover:text-white sm:inline-flex"
+    <AppBar
+      position="sticky"
+      elevation={0}
+      sx={{ bgcolor: 'rgba(15,23,42,0.97)', color: '#fff', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(255,255,255,0.1)' }}
+    >
+      <Toolbar sx={{ maxWidth: 1280, width: '100%', mx: 'auto', px: { xs: 2, sm: 3 } }}>
+        <Box
+          component="a"
+          href="#top"
+          aria-label="FlightPath home"
+          sx={{ display: 'flex', alignItems: 'center', gap: 1.5, textDecoration: 'none', color: 'inherit', flexGrow: 1 }}
+        >
+          <Box sx={{ width: 40, height: 40, borderRadius: 4, bgcolor: '#38BDF8', display: 'grid', placeItems: 'center', boxShadow: '0 8px 20px rgba(56,189,248,0.25)' }}>
+            <FlightIcon sx={{ fontSize: 20, transform: 'rotate(-12deg)' }} />
+          </Box>
+          <Box>
+            <Typography sx={{ fontFamily: "'Manrope Variable', sans-serif", fontSize: 14, fontWeight: 800, letterSpacing: '-0.01em' }}>
+              FlightPath
+            </Typography>
+            <Typography sx={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.55)' }}>
+              Travel assistant
+            </Typography>
+          </Box>
+        </Box>
+
+        <Stack component="nav" aria-label="Primary navigation" direction="row" spacing={0.5} sx={{ display: { xs: 'none', md: 'flex' } }}>
+          {nav.map(([label, href]) => (
+            <Button
+              key={href}
+              href={href}
+              sx={{ color: 'rgba(255,255,255,0.8)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: '#fff' } }}
+            >
+              {label}
+            </Button>
+          ))}
+        </Stack>
+
+        <Stack direction="row" alignItems="center" spacing={0.5} sx={{ ml: 1 }}>
+          <Tooltip title="Search flights, sections & actions">
+            <Button
+              onClick={onOpenCommandMenu}
+              startIcon={<SearchIcon sx={{ fontSize: 18 }} />}
+              sx={{ display: { xs: 'none', sm: 'inline-flex' }, color: 'rgba(255,255,255,0.8)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)', color: '#fff' } }}
+            >
+              Quick search
+              <Box
+                component="kbd"
+                sx={{ ml: 1, borderRadius: 1.5, border: '1px solid rgba(255,255,255,0.15)', bgcolor: 'rgba(255,255,255,0.1)', px: 0.75, py: 0.25, fontSize: 10, fontWeight: 700 }}
               >
-                <Command className="h-4 w-4" />
-                Quick search
-                <kbd className="ml-1 rounded-md border border-white/15 bg-white/10 px-1.5 py-0.5 text-[10px] font-semibold text-slate-300">⌘K</kbd>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Search flights, sections & actions</TooltipContent>
+                ⌘K
+              </Box>
+            </Button>
           </Tooltip>
-          <Button
-            variant="ghost"
-            size="icon"
+          <IconButton
             aria-label="Quick search"
             onClick={onOpenCommandMenu}
-            className="text-slate-300 hover:bg-white/10 hover:text-white sm:hidden"
+            sx={{ display: { xs: 'inline-flex', sm: 'none' }, color: 'rgba(255,255,255,0.8)', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}
           >
-            <Command className="h-4 w-4" />
-          </Button>
-          <ThemeToggle />
+            <SearchIcon fontSize="small" />
+          </IconButton>
           <MobileNavigation items={nav} />
-        </div>
-      </div>
-    </header>
+        </Stack>
+      </Toolbar>
+    </AppBar>
   )
 }
