@@ -7,23 +7,22 @@ import { cn } from '@/lib/utils'
 import FlightStatusBadge from './FlightStatusBadge'
 import AirlineLogo from './AirlineLogo'
 import SplitFlapText from '../board/SplitFlapText'
-
-function codeFromFlightNumber(flightNumber) {
-  return flightNumber?.match(/^[A-Z]{2}/)?.[0]
-}
+import { toLegacyFlight } from '@/lib/adapters/legacyFlight'
 
 const urgencyStyles = {
-  urgent: 'bg-error-light text-error-dark border-error/25',
+  plenty: 'bg-success-light text-success-dark border-success/25',
   limited: 'bg-warning-light text-warning-dark border-warning/25',
-  comfortable: 'bg-success-light text-success-dark border-success/25',
+  urgent: 'bg-error-light text-error-dark border-error/25',
+  missed: 'bg-error-light text-error-dark border-error/25',
+  unknown: 'bg-accent text-muted-foreground border-border',
 }
 
-function FlightLeg({ eyebrow, flight, arriveOrDepartLabel, cityFrom, cityTo }) {
+function FlightLeg({ eyebrow, flight, arriveOrDepartLabel, timeLabel }) {
   return (
     <div className="rounded-2xl border border-border p-4">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <AirlineLogo size="sm" airlineName={flight.airline} airlineCode={codeFromFlightNumber(flight.flightNumber)} />
+          <AirlineLogo size="sm" airlineName={flight.airline} airlineCode={flight.airlineMark} />
           <div>
             <p className="text-[11px] font-bold tracking-[0.1em] text-muted-foreground uppercase">{eyebrow}</p>
             <p className="text-sm font-extrabold">
@@ -31,58 +30,72 @@ function FlightLeg({ eyebrow, flight, arriveOrDepartLabel, cityFrom, cityTo }) {
             </p>
           </div>
         </div>
-        <FlightStatusBadge status={flight.status} />
+        <FlightStatusBadge status={flight.status} label={flight.statusLabel} />
       </div>
       <div className="mt-5 flex items-center justify-between">
         <div>
-          <SplitFlapText value={flight.from} className="text-2xl" />
-          <p className="text-xs font-semibold text-muted-foreground">{cityFrom}</p>
+          <SplitFlapText value={flight.from.code} className="text-2xl" />
+          <p className="text-xs font-semibold text-muted-foreground">{flight.from.city}</p>
         </div>
         <Plane className="size-5 rotate-90 text-primary" />
         <div className="text-right">
-          <SplitFlapText value={flight.to} className="justify-end text-2xl" />
-          <p className="text-xs font-semibold text-muted-foreground">{cityTo}</p>
+          <SplitFlapText value={flight.to.code} className="justify-end text-2xl" />
+          <p className="text-xs font-semibold text-muted-foreground">{flight.to.city}</p>
         </div>
       </div>
       <p className="mt-4 text-[13px] font-semibold text-muted-foreground">
-        {arriveOrDepartLabel}: Terminal {flight.terminal} · Gate {flight.gate}
+        {arriveOrDepartLabel}: Terminal {arriveOrDepartLabel === 'Arrival' ? flight.to.terminal : flight.from.terminal} · {timeLabel}
       </p>
     </div>
   )
 }
 
+function formatMinutes(minutes) {
+  if (minutes === null || minutes === undefined) return '—'
+  const h = Math.floor(Math.abs(minutes) / 60)
+  const m = Math.abs(minutes) % 60
+  return h > 0 ? `${h}h ${m}m` : `${m}m`
+}
+
 export default function ConnectionCard({ journey }) {
-  const urgency = urgencyStyles[journey.urgency] || urgencyStyles.comfortable
+  const [arrivalRaw, departureRaw] = journey.legs
+  const arrival = toLegacyFlight(arrivalRaw)
+  const departure = toLegacyFlight(departureRaw)
+  const urgency = urgencyStyles[journey.urgency] || urgencyStyles.unknown
+  const connectionAirport = departure.from.code
 
   return (
     <Card className="overflow-hidden p-0">
       <div className={cn('flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4', urgency)}>
         <div className="flex items-center gap-2">
           <TriangleAlert className="size-4.5" />
-          <p className="font-extrabold">{journey.connectionStatus}</p>
+          <p className="font-extrabold">{journey.statusText}</p>
         </div>
-        <p className="text-sm font-bold">Layover {journey.layover}</p>
+        <p className="text-sm font-bold">Layover {formatMinutes(journey.scheduledConnectionMinutes)}</p>
       </div>
 
       <div className="p-5 sm:p-6">
         <div className="mb-6 flex items-center gap-3 overflow-hidden rounded-2xl bg-board-bg px-4 py-3">
-          {journey.route.map((code, i) => (
-            <React.Fragment key={code}>
+          {[arrival.from.code, connectionAirport, departure.to.code].map((code, i) => (
+            <React.Fragment key={`${code}-${i}`}>
               {i > 0 && <ArrowRight className="size-4 text-white/30" />}
               <SplitFlapText value={code} className="text-[22px] text-board-text sm:text-[26px]" />
             </React.Fragment>
           ))}
         </div>
 
+        {journey.terminalChanged && (
+          <div className="mb-4 rounded-2xl border border-warning/25 bg-warning-light p-3.5 text-warning-dark">
+            <p className="text-sm font-extrabold">Terminal Changed</p>
+            <p className="text-xs font-semibold">
+              Arrival Terminal {arrival.to.terminal} → Departure Terminal {departure.from.terminal}. Connection feasibility has been recalculated.
+            </p>
+          </div>
+        )}
+
         <div className="mb-6 flex flex-col gap-0 md:flex-row md:items-stretch md:gap-0">
           <div className="md:flex-1">
-            <FlightLeg
-              eyebrow="Current flight"
-              flight={journey.currentFlight}
-              arriveOrDepartLabel="Arrival"
-              cityFrom="London"
-              cityTo={`Arrive ${journey.currentFlight.arrival}`}
-            />
+            <FlightLeg eyebrow="Current flight" flight={arrival} arriveOrDepartLabel="Arrival" timeLabel={`Arrive ${arrival.scheduledArrival}`} />
           </div>
 
           <div className="relative flex items-center justify-center py-3 md:w-16 md:py-0">
@@ -93,44 +106,36 @@ export default function ConnectionCard({ journey }) {
               transition={{ duration: 0.3, ease: 'easeOut' }}
               className="relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-[11px] font-extrabold text-primary-foreground"
             >
-              AMS
+              {connectionAirport}
             </motion.div>
           </div>
-          <p className="-mt-4 mb-2 text-center text-xs font-semibold text-muted-foreground md:hidden">
-            Amsterdam · Connection
-          </p>
+          <p className="-mt-4 mb-2 text-center text-xs font-semibold text-muted-foreground md:hidden">Connection at {connectionAirport}</p>
 
           <div className="md:flex-1">
-            <FlightLeg
-              eyebrow="Connecting flight"
-              flight={journey.nextFlight}
-              arriveOrDepartLabel="Departure"
-              cityFrom="Amsterdam"
-              cityTo={`Depart ${journey.nextFlight.departure}`}
-            />
+            <FlightLeg eyebrow="Connecting flight" flight={departure} arriveOrDepartLabel="Departure" timeLabel={`Depart ${departure.scheduledDeparture}`} />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 *:min-w-0">
           <div className="rounded-2xl bg-accent p-3.5">
             <Clock className="size-4.5 text-muted-foreground" />
-            <p className="mt-2 text-[11px] font-bold text-muted-foreground uppercase">Layover</p>
-            <p className="text-sm font-bold">{journey.layover}</p>
+            <p className="mt-2 text-[11px] font-bold text-muted-foreground uppercase">Effective time</p>
+            <p className="text-sm font-bold">{formatMinutes(journey.effectiveConnectionMinutes)}</p>
           </div>
           <div className="rounded-2xl bg-accent p-3.5">
             <Footprints className="size-4.5 text-muted-foreground" />
             <p className="mt-2 text-[11px] font-bold text-muted-foreground uppercase">Gate transit</p>
-            <p className="text-sm font-bold">{journey.walkTime}</p>
+            <p className="text-sm font-bold">{journey.walkMinutes} min</p>
           </div>
           <div className="rounded-2xl bg-accent p-3.5">
             <Timer className="size-4.5 text-muted-foreground" />
             <p className="mt-2 text-[11px] font-bold text-muted-foreground uppercase">Boarding</p>
-            <SplitFlapText value={journey.nextFlight.boarding} className="mt-0.5 text-sm font-bold" />
+            <SplitFlapText value={departure.boarding} className="mt-0.5 text-sm font-bold" />
           </div>
           <div className="rounded-2xl border border-warning/20 bg-warning-light p-3.5">
             <TriangleAlert className="size-4.5 text-warning-dark" />
             <p className="mt-2 text-[11px] font-bold text-warning-dark uppercase">Gate closes</p>
-            <SplitFlapText value={journey.boardingDeadline} className="mt-0.5 text-sm font-bold text-warning-dark" />
+            <SplitFlapText value={departure.gateCloses} className="mt-0.5 text-sm font-bold text-warning-dark" />
           </div>
         </div>
 

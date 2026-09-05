@@ -2,8 +2,8 @@ import React from 'react'
 import { Clock } from 'lucide-react'
 import { useLocalTime } from '@/hooks/useLocalTime'
 
-export default function LocalTimeCard({ offsetHours, offsetLabel }) {
-  const time = useLocalTime(offsetHours)
+export default function LocalTimeCard({ timezone, offsetLabel }) {
+  const time = useLocalTime(timezone)
   return (
     <div className="rounded-2xl bg-board-bg p-4 text-board-text">
       <div className="flex items-center gap-1.5 opacity-70">

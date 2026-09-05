@@ -16,10 +16,16 @@ const toneClasses = {
   rose: 'bg-error text-white',
 }
 
-function GateAlertBody({ countdown, onDismiss }) {
+function GateAlertBody({ countdown, onDismiss, flight }) {
   const { minutes, formatted, label, message, tone } = countdown
   const tones = toneClasses[tone] || toneClasses.slate
   const isUrgent = tone === 'orange' || tone === 'rose'
+  const airline = flight?.airline?.name ?? 'British Airways'
+  const flightNumber = flight?.flightNumber ?? 'BA117'
+  const gate = flight?.origin?.gate ?? 'B42'
+  const destinationCity = flight?.destination?.city ?? 'New York'
+  const destinationIata = flight?.destination?.iata ?? 'JFK'
+  const terminal = flight?.origin?.terminal ?? '5'
 
   return (
     <motion.div
@@ -36,7 +42,7 @@ function GateAlertBody({ countdown, onDismiss }) {
       <div className="px-4 pt-5 pb-1">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3">
-            <AirlineLogo airlineName="British Airways" airlineCode="BA" size="sm" />
+            <AirlineLogo airlineName={airline} airlineCode={flight?.airline?.iata ?? 'BA'} size="sm" />
             <div>
               <motion.p
                 className="font-heading text-2xl font-extrabold text-foreground"
@@ -45,7 +51,9 @@ function GateAlertBody({ countdown, onDismiss }) {
               >
                 {label}
               </motion.p>
-              <p className="mt-1 text-sm font-semibold text-muted-foreground">British Airways BA117 to New York JFK</p>
+              <p className="mt-1 text-sm font-semibold text-muted-foreground">
+                {airline} {flightNumber} to {destinationCity} {destinationIata}
+              </p>
             </div>
           </div>
           <div className="min-w-[90px] rounded-2xl border border-warning/25 bg-warning-light px-4 py-3 text-center">
@@ -55,7 +63,7 @@ function GateAlertBody({ countdown, onDismiss }) {
         </div>
 
         <div className="mt-6 rounded-2xl border border-warning/25 bg-warning-light p-4">
-          <p className="text-[17px] font-extrabold text-warning-dark">Gate B42 closes in {minutes} minutes</p>
+          <p className="text-[17px] font-extrabold text-warning-dark">Gate {gate} closes in {minutes} minutes</p>
           <p className="mt-1 text-[13px] font-semibold text-warning-dark/80">{message}</p>
         </div>
 
@@ -63,7 +71,7 @@ function GateAlertBody({ countdown, onDismiss }) {
           <div className="rounded-2xl bg-accent p-4">
             <MapPin className="size-4.5 text-muted-foreground" />
             <p className="mt-2 text-[11px] font-bold text-muted-foreground uppercase">Location</p>
-            <SplitFlapText value="TERMINAL 5 · GATE B42" className="mt-1 text-[13px] font-bold text-foreground" />
+            <SplitFlapText value={`TERMINAL ${terminal} · GATE ${gate}`} className="mt-1 text-[13px] font-bold text-foreground" />
           </div>
           <div className="rounded-2xl bg-accent p-4">
             <Clock className="size-4.5 text-muted-foreground" />
@@ -91,16 +99,17 @@ function GateAlertBody({ countdown, onDismiss }) {
   )
 }
 
-export default function GateAlert({ countdown, open, onOpenChange }) {
+export default function GateAlert({ countdown, open, onOpenChange, flight }) {
   const isDesktop = useMediaQuery('(min-width: 640px)')
   const dismiss = () => onOpenChange(false)
+  const flightNumber = flight?.flightNumber ?? 'your flight'
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent showCloseButton={false} className="max-w-lg p-4">
-          <DialogTitle className="sr-only">Urgent travel alert: gate closing countdown for BA117</DialogTitle>
-          <GateAlertBody countdown={countdown} onDismiss={dismiss} />
+          <DialogTitle className="sr-only">Urgent travel alert: gate closing countdown for {flightNumber}</DialogTitle>
+          <GateAlertBody countdown={countdown} onDismiss={dismiss} flight={flight} />
         </DialogContent>
       </Dialog>
     )
@@ -109,9 +118,9 @@ export default function GateAlert({ countdown, open, onOpenChange }) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" showCloseButton={false} className="p-4 pb-6">
-        <SheetTitle className="sr-only">Urgent travel alert: gate closing countdown for BA117</SheetTitle>
+        <SheetTitle className="sr-only">Urgent travel alert: gate closing countdown for {flightNumber}</SheetTitle>
         <div className="mx-auto mb-2 h-1 w-10 rounded-full bg-border" />
-        <GateAlertBody countdown={countdown} onDismiss={dismiss} />
+        <GateAlertBody countdown={countdown} onDismiss={dismiss} flight={flight} />
       </SheetContent>
     </Sheet>
   )

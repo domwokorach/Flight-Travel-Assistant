@@ -58,7 +58,7 @@ export default function FlightCard({ flight, featured = false }) {
             </div>
           </div>
           <div className="flex items-center gap-1">
-            <FlightStatusBadge status={flight.status} pulse={flight.status === 'Boarding'} />
+            <FlightStatusBadge status={flight.status} label={flight.statusLabel} pulse={flight.status === 'boarding'} />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" aria-label="Flight actions" className="size-11 rounded-xl">
@@ -101,49 +101,67 @@ export default function FlightCard({ flight, featured = false }) {
           </div>
         </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-4 border-y border-border py-5 *:min-w-0 sm:grid-cols-4">
-          <TimePair label="Departure" scheduled={flight.scheduledDeparture} actual={flight.actualDeparture} />
-          <div>
-            <p className="text-[11px] font-bold text-muted-foreground">Boarding</p>
-            <SplitFlapText value={flight.boarding} className="mt-1 flex text-lg text-foreground" />
+        {flight.status === 'cancelled' ? (
+          <div className="mt-6 rounded-2xl border border-error/20 bg-error-light p-4 text-error-dark">
+            <p className="text-sm font-extrabold">Flight Cancelled</p>
+            <p className="mt-1 text-xs leading-relaxed font-semibold">{flight.raw?.disruption?.reason ?? 'Contact the operating airline for rebooking options.'}</p>
+            {flight.raw?.disruption?.rebookingInfo && (
+              <p className="mt-2 text-xs leading-relaxed font-semibold">{flight.raw.disruption.rebookingInfo}</p>
+            )}
+            {flight.raw?.disruption?.alternativeFlights?.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {flight.raw.disruption.alternativeFlights.map((alt) => (
+                  <span key={alt} className="rounded-full bg-white/60 px-3 py-1 text-[11px] font-bold">
+                    {alt}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
-          <TimePair label="Arrival" scheduled={flight.scheduledArrival} actual={flight.actualArrival} />
-          <div>
-            <p className="text-[11px] font-bold text-muted-foreground">Duration</p>
-            <p className="mt-1 text-lg font-extrabold">{flight.duration}</p>
-          </div>
-        </div>
+        ) : (
+          <>
+            <div className="mt-6 grid grid-cols-2 gap-4 border-y border-border py-5 *:min-w-0 sm:grid-cols-4">
+              <TimePair label="Departure" scheduled={flight.scheduledDeparture} actual={flight.actualDeparture} />
+              <div>
+                <p className="text-[11px] font-bold text-muted-foreground">Boarding</p>
+                <SplitFlapText value={flight.boarding} className="mt-1 flex text-lg text-foreground" />
+              </div>
+              <TimePair label="Arrival" scheduled={flight.scheduledArrival} actual={flight.actualArrival} />
+              <div>
+                <p className="text-[11px] font-bold text-muted-foreground">Duration</p>
+                <p className="mt-1 text-lg font-extrabold">{flight.duration}</p>
+              </div>
+            </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-4 *:min-w-0 sm:grid-cols-4">
-          <div className="flex gap-2">
-            <DoorOpen className="mt-0.5 size-4.5 shrink-0 text-muted-foreground" />
-            <div>
-              <p className="text-[11px] font-bold text-muted-foreground">Terminal</p>
-              <p className="mt-1 text-sm font-bold">{flight.from.terminal}</p>
+            <div className="mt-5 grid grid-cols-2 gap-4 *:min-w-0 sm:grid-cols-4">
+              <div className="flex gap-2">
+                <DoorOpen className="mt-0.5 size-4.5 shrink-0 text-muted-foreground" />
+                <div>
+                  <p className="text-[11px] font-bold text-muted-foreground">Terminal</p>
+                  <p className="mt-1 text-sm font-bold">{flight.from.terminal}</p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <MapPin className="mt-0.5 size-4.5 shrink-0 text-muted-foreground" />
+                <div>
+                  <p className="text-[11px] font-bold text-muted-foreground">Gate</p>
+                  <SplitFlapText value={flight.from.gate} className={cn('mt-1 text-sm font-bold', 'text-foreground')} />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Clock className="mt-0.5 size-4.5 shrink-0 text-muted-foreground" />
+                <div>
+                  <p className="text-[11px] font-bold text-muted-foreground">Gate closes</p>
+                  <SplitFlapText value={flight.gateCloses} className="mt-1 text-sm font-bold" />
+                </div>
+              </div>
+              <div className="col-span-2 rounded-2xl bg-accent px-4 py-3 sm:col-span-1">
+                <p className="text-[11px] font-bold text-muted-foreground">Update</p>
+                <p className="mt-1 text-xs leading-relaxed font-semibold">{flight.note}</p>
+              </div>
             </div>
-          </div>
-          <div className="flex gap-2">
-            <MapPin className="mt-0.5 size-4.5 shrink-0 text-muted-foreground" />
-            <div>
-              <p className="text-[11px] font-bold text-muted-foreground">Gate</p>
-              <SplitFlapText
-                value={flight.from.gate}
-                className={cn('mt-1 text-sm font-bold', flight.status === 'Gate Change' ? 'text-primary-light' : 'text-foreground')}
-              />
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Clock className="mt-0.5 size-4.5 shrink-0 text-muted-foreground" />
-            <div>
-              <p className="text-[11px] font-bold text-muted-foreground">Gate closes</p>
-              <SplitFlapText value={flight.gateCloses} className="mt-1 text-sm font-bold" />
-            </div>
-          </div>
-          <div className="col-span-2 rounded-2xl bg-accent px-4 py-3 sm:col-span-1">
-            <p className="text-[11px] font-bold text-muted-foreground">Update</p>
-            <p className="mt-1 text-xs leading-relaxed font-semibold">{flight.note}</p>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </Card>
   )

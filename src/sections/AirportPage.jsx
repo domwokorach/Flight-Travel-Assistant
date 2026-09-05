@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import AirportInfo from '../components/airport/AirportInfo'
-import { getAirportServices } from '../services/airportService'
+import { useAirportServices } from '@/hooks/useAirport'
 
 export default function AirportPage() {
-  const [services, setServices] = useState([])
-
-  useEffect(() => {
-    getAirportServices().then(setServices)
-  }, [])
+  const { services } = useAirportServices('LHR')
 
   return (
     <div className="mt-10">

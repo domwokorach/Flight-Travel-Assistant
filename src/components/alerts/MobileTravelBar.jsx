@@ -3,9 +3,12 @@ import { motion } from 'motion/react'
 import { Navigation, Map } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-export default function MobileTravelBar({ countdown, onAlert }) {
+export default function MobileTravelBar({ countdown, onAlert, flight }) {
   const { formatted, tone } = countdown
   const isUrgent = tone === 'orange' || tone === 'rose'
+  const flightNumber = flight?.flightNumber ?? 'BA117'
+  const gate = flight?.origin?.gate ?? 'B42'
+  const statusLabel = flight?.statusText ?? 'Boarding'
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-30 block border-t border-border bg-card/95 p-2 backdrop-blur-sm md:hidden">
@@ -17,8 +20,8 @@ export default function MobileTravelBar({ countdown, onAlert }) {
           animate={isUrgent ? { opacity: [1, 0.75, 1] } : { opacity: 1 }}
           transition={isUrgent ? { duration: 1.6, repeat: Infinity, ease: 'easeInOut' } : undefined}
         >
-          <p className="truncate text-[10px] font-extrabold text-warning-dark uppercase">BA117 · Boarding</p>
-          <p className="truncate font-mono text-sm font-extrabold text-foreground tabular-nums">Gate B42 · closes {formatted}</p>
+          <p className="truncate text-[10px] font-extrabold text-warning-dark uppercase">{flightNumber} · {statusLabel}</p>
+          <p className="truncate font-mono text-sm font-extrabold text-foreground tabular-nums">Gate {gate} · closes {formatted}</p>
         </motion.button>
         <Button className="h-11 px-3.5">
           <Navigation className="size-4" />

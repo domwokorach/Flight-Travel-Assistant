@@ -9,22 +9,23 @@ import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AirlineLogo from './AirlineLogo'
 import { getAirline } from '@/data/airlines'
-
-const recent = ['BA117', 'VS103', 'London', 'JFK']
+import { useRecentSearches } from '@/hooks/useRecentSearches'
 
 function airlineCodeFor(term) {
   const code = term.match(/^([A-Z]{2})\d+$/)?.[1]
   return code && getAirline(code) ? code : null
 }
 
-export default function FlightSearch({ onSearch, onClear, loading = false }) {
-  const [date, setDate] = useState('2026-09-04')
+export default function FlightSearch({ onSearch, onClear, loading = false, isLive = false }) {
+  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10))
   const [searchBy, setSearchBy] = useState('Flight number')
   const [query, setQuery] = useState('BA117')
   const [filter, setFilter] = useState('All')
+  const { items: recent, add: addRecentSearch } = useRecentSearches()
 
   const submit = (e) => {
     e.preventDefault()
+    if (query.trim()) addRecentSearch(query.trim())
     onSearch({ query, searchBy, date: format(parseISO(date), 'yyyy-MM-dd'), filter })
   }
   const clear = () => {
@@ -42,7 +43,7 @@ export default function FlightSearch({ onSearch, onClear, loading = false }) {
             <p className="text-[11px] font-bold text-muted-foreground">Find your flight</p>
             <h1 className="mt-0.5 font-heading text-2xl font-extrabold sm:text-[30px]">Departures, arrivals & connections</h1>
           </div>
-          <Badge className="hidden bg-primary/15 text-primary-light sm:inline-flex">Live-style demo data</Badge>
+          <Badge className="hidden bg-primary/15 text-primary-light sm:inline-flex">{isLive ? 'Live flight data' : 'Demo data · add an API key for live flights'}</Badge>
         </div>
 
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end">

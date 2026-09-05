@@ -10,6 +10,8 @@ import {
   CommandSeparator,
 } from '@/components/ui/command'
 import { useSnackbar } from '@/lib/snackbar'
+import { useRecentSearches } from '@/hooks/useRecentSearches'
+import { FOLLOWED_FLIGHT_NUMBER } from '@/lib/followedFlight'
 
 const sections = [
   { label: 'Flights', href: '#flights', icon: Plane },
@@ -17,10 +19,9 @@ const sections = [
   { label: 'Transport & Directions', href: '#transport', icon: Train },
 ]
 
-const recentSearches = ['BA117', 'London', 'JFK']
-
 export default function CommandMenu({ open, onOpenChange, onOpenGateAlert }) {
   const { notify } = useSnackbar()
+  const { items: recentSearches } = useRecentSearches()
 
   useEffect(() => {
     function onKeyDown(e) {
@@ -52,6 +53,7 @@ export default function CommandMenu({ open, onOpenChange, onOpenGateAlert }) {
           ))}
         </CommandGroup>
         <CommandSeparator />
+        {recentSearches.length > 0 && (
         <CommandGroup heading="Recent searches">
           {recentSearches.map((term) => (
             <CommandItem
@@ -67,6 +69,7 @@ export default function CommandMenu({ open, onOpenChange, onOpenGateAlert }) {
             </CommandItem>
           ))}
         </CommandGroup>
+        )}
         <CommandSeparator />
         <CommandGroup heading="Quick actions">
           <CommandItem
@@ -78,7 +81,7 @@ export default function CommandMenu({ open, onOpenChange, onOpenGateAlert }) {
           >
             <BellRing />
             Open gate alert
-            <span className="ml-auto text-[11px] font-bold text-muted-foreground">BA117</span>
+            <span className="ml-auto text-[11px] font-bold text-muted-foreground">{FOLLOWED_FLIGHT_NUMBER}</span>
           </CommandItem>
           <CommandItem value="view airport services" onSelect={() => go('#airport')}>
             <Map />

@@ -3,15 +3,19 @@ import { cn } from '@/lib/utils'
 import SplitFlapText from './SplitFlapText'
 
 const statusTone = {
-  'On Time': '#4ADE80',
-  Boarding: '#38BDF8',
-  'Gate Open': '#22D3EE',
-  'Gate Closing': '#FB923C',
-  Delayed: '#FBBF24',
-  Departed: '#818CF8',
-  Arrived: '#4ADE80',
-  Cancelled: '#FB7185',
-  'Gate Change': '#A78BFA',
+  scheduled: '#94A3B8',
+  on_time: '#4ADE80',
+  boarding: '#38BDF8',
+  gate_open: '#22D3EE',
+  gate_closing: '#FB923C',
+  delayed: '#FBBF24',
+  departed: '#818CF8',
+  in_air: '#818CF8',
+  landed: '#4ADE80',
+  arrived: '#4ADE80',
+  cancelled: '#FB7185',
+  diverted: '#A78BFA',
+  unknown: '#94A3B8',
 }
 
 function boardRow(flight) {
@@ -31,6 +35,7 @@ function boardRow(flight) {
     terminal: place.terminal,
     gate: flight.from.gate,
     status: flight.status,
+    statusLabel: flight.statusLabel,
   }
 }
 
@@ -54,7 +59,7 @@ function BoardRow({ row }) {
         </p>
       </div>
       <SplitFlapText value={row.gate} className="text-base text-board-text md:text-lg" />
-      <SplitFlapText value={row.status} className="text-xs md:text-sm" charClassName="" style={{ color: statusTone[row.status] }} />
+      <SplitFlapText value={row.statusLabel} className="text-xs md:text-sm" charClassName="" style={{ color: statusTone[row.status] }} />
     </div>
   )
 }

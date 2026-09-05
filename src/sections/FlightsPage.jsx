@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useMemo } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { Info, RotateCcw, LayoutGrid, List } from 'lucide-react'
 import { Card } from '@/components/ui/card'
@@ -15,9 +15,15 @@ import AirportSnapshot from '../components/airport/AirportSnapshot'
 import AlertEscalation from '../components/alerts/AlertEscalation'
 import { SkeletonFlightCard } from '../components/flights/FlightCardSkeleton'
 import { SectionHeading } from '../components/common/SectionHeading'
+import { LiveIndicator } from '../components/common/LiveIndicator'
+import { DataFreshnessBanner } from '../components/common/DataFreshness'
 import { useFlightSearch } from '../hooks/useFlightSearch'
-import { getFlights, getConnectionJourney } from '../services/flightService'
-import { getCityInfo } from '../services/weatherService'
+import { useDepartures, useArrivals, useConnectionJourney } from '../hooks/useFlights'
+import { useWeather } from '../hooks/useWeather'
+import { toLegacyFlight } from '../lib/adapters/legacyFlight'
+import { findAirport } from '../data/airportDirectory'
+
+const AIRPORT = 'LHR'
 
 function EmptyState({ query, onReset }) {
   return (
@@ -27,7 +33,7 @@ function EmptyState({ query, onReset }) {
       </div>
       <h3 className="mt-4 font-heading text-lg font-bold">No matching flights</h3>
       <p className="mx-auto mt-2 max-w-[420px] text-sm leading-relaxed font-medium text-muted-foreground">
-        We couldn't find a demo flight matching "{query}". Try BA117, London, JFK, British Airways, or clear the search.
+        We couldn't find a flight matching "{query}". Try a flight number, city, or airline, or clear the search.
       </p>
       <Button variant="outline" onClick={onReset} className="mt-4">
         Clear search
@@ -41,7 +47,7 @@ function ErrorState({ onRetry }) {
     <Alert variant="error">
       <Info className="size-5" />
       <AlertTitle>Flight information unavailable</AlertTitle>
-      <AlertDescription>The interface is ready for API error handling. Retry to restore the mock feed.</AlertDescription>
+      <AlertDescription>The provider didn't respond in time. Retry to reconnect.</AlertDescription>
       <div className="col-start-2 mt-2">
         <Button size="sm" className="bg-error hover:brightness-90" onClick={onRetry}>
           <RotateCcw className="size-4" />
@@ -53,26 +59,45 @@ function ErrorState({ onRetry }) {
 }
 
 export default function FlightsPage({ countdown }) {
-  const [allFlights, setAllFlights] = useState([])
-  const [connectionJourney, setConnectionJourney] = useState(null)
-  const [cityInfo, setCityInfo] = useState(null)
-  const [selectedCity, setSelectedCity] = useState('destination')
-  const [view, setView] = useState('cards')
+  const [view, setView] = React.useState('cards')
+  const [selectedCity, setSelectedCity] = React.useState('destination')
 
-  useEffect(() => {
-    getFlights().then(setAllFlights)
-    getConnectionJourney().then(setConnectionJourney)
-    getCityInfo().then(setCityInfo)
-  }, [])
+  const departures = useDepartures(AIRPORT)
+  const arrivals = useArrivals(AIRPORT)
+  const connection = useConnectionJourney('KL1002', 'KL641')
+  const weather = useWeather(['LHR', 'AMS', 'JFK'])
 
-  const { tab, changeTab, search, loading, error, setError, visibleFlights, doSearch, clearSearch } = useFlightSearch(allFlights)
+  const { tab, changeTab, search, error, setError, visibleFlights, doSearch, clearSearch } = useFlightSearch(
+    useMemo(() => [...departures.flights, ...arrivals.flights], [departures.flights, arrivals.flights])
+  )
+  const visibleLegacy = useMemo(() => visibleFlights.map(toLegacyFlight), [visibleFlights])
+
+  const boardConnectionState = tab === 'arrival' ? arrivals.connectionState : departures.connectionState
+  const boardLastUpdated = tab === 'arrival' ? arrivals.lastUpdated : departures.lastUpdated
+  const loading =
+    tab === 'arrival' ? arrivals.lastUpdated === null && !arrivals.error : departures.lastUpdated === null && !departures.error
+
+  const originTimezone = findAirport(AIRPORT)?.timezone
+  const boardingFlight = useMemo(
+    () => departures.flights.find((f) => f.status === 'boarding' || f.status === 'gate_open') ?? null,
+    [departures.flights]
+  )
+  const hasDisruption = useMemo(
+    () => departures.flights.some((f) => f.status === 'cancelled' || f.status === 'delayed'),
+    [departures.flights]
+  )
 
   return (
     <section id="flights" className="scroll-mt-24 pt-3.5">
-      <FlightSearch onSearch={doSearch} onClear={clearSearch} loading={loading} />
+      <FlightSearch onSearch={doSearch} onClear={clearSearch} loading={false} isLive={departures.isLive} />
 
       <div className="mt-7 mb-4 flex flex-row flex-wrap items-end justify-between gap-2">
-        <SectionHeading eyebrow="Flights" title="Your travel day at a glance" />
+        <div>
+          <SectionHeading eyebrow="Flights" title="Your travel day at a glance" />
+          <div className="mt-1.5">
+            <LiveIndicator state={boardConnectionState} lastUpdated={boardLastUpdated} />
+          </div>
+        </div>
         <div className="flex flex-row flex-wrap items-center gap-2">
           <FlightTabs value={tab} onChange={changeTab} />
           {tab !== 'connection' && (
@@ -102,6 +127,7 @@ export default function FlightsPage({ countdown }) {
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
           >
+            <DataFreshnessBanner connectionState={boardConnectionState} lastUpdated={boardLastUpdated} />
             {loading ? (
               <>
                 <SkeletonFlightCard />
@@ -110,28 +136,37 @@ export default function FlightsPage({ countdown }) {
             ) : error ? (
               <ErrorState onRetry={() => setError(false)} />
             ) : tab === 'connection' ? (
-              connectionJourney && <ConnectionCard journey={connectionJourney} />
-            ) : !visibleFlights.length ? (
+              connection.journey && <ConnectionCard journey={connection.journey} />
+            ) : !visibleLegacy.length ? (
               <EmptyState query={search?.query || ''} onReset={clearSearch} />
             ) : view === 'board' ? (
-              <DepartureBoard heading={tab === 'arrival' ? 'ARRIVALS' : 'DEPARTURES'} flights={visibleFlights} />
+              <DepartureBoard heading={tab === 'arrival' ? 'ARRIVALS' : 'DEPARTURES'} flights={visibleLegacy} />
             ) : (
-              visibleFlights.map((flight, i) => (
+              visibleLegacy.map((flight, i) => (
                 <motion.div
                   key={flight.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.25, delay: i * 0.04, ease: 'easeOut' }}
                 >
-                  <FlightCard flight={flight} featured={flight.id === 'ba117' && i === 0} />
+                  <FlightCard flight={flight} featured={flight.status === 'boarding' && i === 0} />
                 </motion.div>
               ))
             )}
           </motion.div>
         </AnimatePresence>
         <div className="flex flex-col gap-4">
-          {cityInfo && <CityWeatherCard cities={cityInfo} selected={selectedCity} onSelect={setSelectedCity} />}
-          <AirportSnapshot />
+          {weather.cities.length > 0 && (
+            <CityWeatherCard
+              cities={weather.cities}
+              selected={selectedCity === 'destination' ? 'JFK' : selectedCity === 'connection' ? 'AMS' : 'LHR'}
+              onSelect={(iata) => setSelectedCity(iata === 'JFK' ? 'destination' : iata === 'AMS' ? 'connection' : 'departure')}
+              baseTimezone={originTimezone}
+              connectionState={weather.connectionState}
+              lastUpdated={weather.lastUpdated}
+            />
+          )}
+          <AirportSnapshot airport={AIRPORT} boardingFlight={boardingFlight} hasDisruption={hasDisruption} />
           <AlertEscalation countdown={countdown} />
         </div>
       </div>
