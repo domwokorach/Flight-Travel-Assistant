@@ -35,14 +35,14 @@ export default function FlightSearch({ onSearch, onClear, loading = false }) {
 
   return (
     <Card className="relative overflow-hidden p-5 sm:p-6">
-      <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#0B5FA5,#38BDF8,#0B5FA5)]" />
+      <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#4F8CFF,#7DB3FF,#4F8CFF)]" />
       <form onSubmit={submit}>
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-[11px] font-bold text-muted-foreground">Find your flight</p>
             <h1 className="mt-0.5 font-heading text-2xl font-extrabold sm:text-[30px]">Departures, arrivals & connections</h1>
           </div>
-          <Badge className="hidden bg-primary-light text-primary-dark sm:inline-flex">Live-style demo data</Badge>
+          <Badge className="hidden bg-primary/15 text-primary-light sm:inline-flex">Live-style demo data</Badge>
         </div>
 
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end">

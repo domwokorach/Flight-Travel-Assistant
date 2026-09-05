@@ -1,4 +1,5 @@
 import React from 'react'
+import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 
 /**
@@ -9,9 +10,13 @@ import { cn } from '@/lib/utils'
  */
 export function StepDot({ status = 'upcoming', children, className }) {
   return (
-    <div
+    <motion.div
+      key={status}
+      initial={{ scale: 0.7 }}
+      animate={{ scale: 1 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
       className={cn(
-        'grid size-8 shrink-0 place-items-center rounded-full border-2 text-xs font-extrabold',
+        'grid size-8 shrink-0 place-items-center rounded-full border-2 text-xs font-extrabold transition-colors duration-300',
         status === 'done' && 'border-success bg-success text-white',
         status === 'current' &&
           'border-primary bg-primary text-white motion-safe:animate-[journey-pulse_1.8s_ease-out_infinite]',
@@ -21,7 +26,7 @@ export function StepDot({ status = 'upcoming', children, className }) {
       )}
     >
       {children}
-    </div>
+    </motion.div>
   )
 }
 
@@ -29,7 +34,7 @@ export function StepLine({ status = 'upcoming', orientation = 'horizontal' }) {
   return (
     <div
       className={cn(
-        'shrink-0',
+        'shrink-0 transition-colors duration-300',
         orientation === 'horizontal' ? 'h-0.5 flex-1' : 'w-0.5 flex-1 min-h-6',
         status === 'done' ? 'bg-success' : 'bg-border'
       )}

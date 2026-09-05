@@ -29,12 +29,12 @@ export default function AirportSnapshot() {
           </div>
           <SplitFlapText value="B42" className="text-sm text-primary" />
         </div>
-        <div className="flex items-center justify-between rounded-2xl bg-[#FDECDD] p-3.5">
-          <div className="flex items-center gap-2 text-sm font-bold text-[#7C3E07]">
+        <div className="flex items-center justify-between rounded-2xl border border-warning/20 bg-warning-light p-3.5">
+          <div className="flex items-center gap-2 text-sm font-bold text-warning-dark">
             <Timer className="size-4.5" />
             <span>Gate closes</span>
           </div>
-          <SplitFlapText value="14:55" className="text-sm text-[#7C3E07]" />
+          <SplitFlapText value="14:55" className="text-sm text-warning-dark" />
         </div>
       </div>
       <a href="#airport" className="mt-4 inline-flex items-center gap-1.5 text-sm font-extrabold text-primary hover:underline">

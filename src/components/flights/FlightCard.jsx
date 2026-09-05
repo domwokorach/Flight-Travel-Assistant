@@ -91,7 +91,7 @@ export default function FlightCard({ flight, featured = false }) {
             </div>
             <div className="flex items-center gap-2">
               <div className="h-px w-5 bg-white/15 sm:w-12" />
-              <PlaneTakeoff className="size-5 text-[#38BDF8]" />
+              <PlaneTakeoff className="size-5 text-primary-light" />
               <div className="h-px w-5 bg-white/15 sm:w-12" />
             </div>
             <div className="text-right">
@@ -128,7 +128,7 @@ export default function FlightCard({ flight, featured = false }) {
               <p className="text-[11px] font-bold text-muted-foreground">Gate</p>
               <SplitFlapText
                 value={flight.from.gate}
-                className={cn('mt-1 text-sm font-bold', flight.status === 'Gate Change' ? 'text-secondary' : 'text-foreground')}
+                className={cn('mt-1 text-sm font-bold', flight.status === 'Gate Change' ? 'text-primary-light' : 'text-foreground')}
               />
             </div>
           </div>

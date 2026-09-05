@@ -1,0 +1,236 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Dark aviation navy — fixed theme, not a light/dark toggle */
+  --background: #08111F;
+  --background-alt: #0D1726;
+  --surface-elevated: #111C2D;
+  --paper: #152235;
+  --surface-subtle: #19283D;
+
+  --primary: #4F8CFF;
+  --primary-light: #7DB3FF;
+  --primary-dark: #3A6FDB;
+  --primary-foreground: #F7F9FC;
+
+  --secondary: #19283D;
+  --secondary-foreground: #F7F9FC;
+
+  --success: #34D399;
+  --success-light: rgba(52, 211, 153, 0.12);
+  --success-dark: #7EEBC3;
+
+  --warning: #F5A623;
+  --warning-light: rgba(245, 166, 35, 0.12);
+  --warning-dark: #FBC768;
+
+  --error: #EF4444;
+  --error-light: rgba(239, 68, 68, 0.14);
+  --error-dark: #FCA5A5;
+
+  --info: #22D3EE;
+  --info-light: rgba(34, 211, 238, 0.12);
+  --info-dark: #7EE3F2;
+
+  --text-primary: #F7F9FC;
+  --text-secondary: #B7C2D0;
+  --text-tertiary: #8190A5;
+  --border: #26364D;
+  --border-muted: rgba(255, 255, 255, 0.08);
+  --action-hover: rgba(255, 255, 255, 0.05);
+
+  --board-bg: #060D17;
+  --board-alt: #0B131F;
+  --board-text: #F4F1E8;
+  --board-muted: #8190A5;
+
+  /* shadcn/ui semantic tokens, mapped onto the aviation palette above */
+  --foreground: var(--text-primary);
+  --card: var(--paper);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface-elevated);
+  --popover-foreground: var(--text-primary);
+  --muted: var(--surface-subtle);
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--action-hover);
+  --accent-foreground: var(--text-primary);
+  --destructive: var(--error);
+  --destructive-foreground: #FFFFFF;
+  --input: var(--border);
+  --ring: var(--primary);
+
+  --radius: 1.25rem;
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 3px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 8px 24px rgba(2, 6, 14, 0.35);
+  --shadow-popover: 0 20px 45px rgba(2, 6, 14, 0.55);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-alt: var(--background-alt);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-paper: var(--paper);
+  --color-surface-subtle: var(--surface-subtle);
+
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-success: var(--success);
+  --color-success-light: var(--success-light);
+  --color-success-dark: var(--success-dark);
+
+  --color-warning: var(--warning);
+  --color-warning-light: var(--warning-light);
+  --color-warning-dark: var(--warning-dark);
+
+  --color-error: var(--error);
+  --color-error-light: var(--error-light);
+  --color-error-dark: var(--error-dark);
+
+  --color-info: var(--info);
+  --color-info-light: var(--info-light);
+  --color-info-dark: var(--info-dark);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-border: var(--border);
+  --color-border-muted: var(--border-muted);
+  --color-action-hover: var(--action-hover);
+
+  --color-board-bg: var(--board-bg);
+  --color-board-alt: var(--board-alt);
+  --color-board-text: var(--board-text);
+  --color-board-muted: var(--board-muted);
+
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --font-mono: var(--font-mono);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.01em;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+/* Reserved for board/countdown/flight-time numerals rendered in IBM Plex Mono. */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+.animate-accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+.animate-accordion-up {
+  animation: accordion-up 0.2s ease-out;
+}
+
+@keyframes journey-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(79, 140, 255, 0.35); }
+  100% { box-shadow: 0 0 0 8px rgba(79, 140, 255, 0); }
+}
+
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+@keyframes split-flap-in {
+  from { opacity: 0; transform: translateY(-3px) scaleY(0.4); }
+  to { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,4 +1,5 @@
 import React from 'react'
+import { motion } from 'motion/react'
 import { ArrowRight, TriangleAlert, Plane, Clock, Footprints, Timer } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -12,9 +13,9 @@ function codeFromFlightNumber(flightNumber) {
 }
 
 const urgencyStyles = {
-  urgent: 'bg-[#FBE7E9] text-[#8F1F2C] border-[#F3C3C8]',
-  limited: 'bg-[#FDF2D8] text-[#8A5A05] border-[#F3DFA6]',
-  comfortable: 'bg-[#E4F6EC] text-[#0B7A44] border-[#BFE7D1]',
+  urgent: 'bg-error-light text-error-dark border-error/25',
+  limited: 'bg-warning-light text-warning-dark border-warning/25',
+  comfortable: 'bg-success-light text-success-dark border-success/25',
 }
 
 function FlightLeg({ eyebrow, flight, arriveOrDepartLabel, cityFrom, cityTo }) {
@@ -86,9 +87,14 @@ export default function ConnectionCard({ journey }) {
 
           <div className="relative flex items-center justify-center py-3 md:w-16 md:py-0">
             <div className="absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 bg-border md:block" />
-            <div className="relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full bg-foreground text-[11px] font-extrabold text-background">
+            <motion.div
+              initial={{ scale: 0.6, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-[11px] font-extrabold text-primary-foreground"
+            >
               AMS
-            </div>
+            </motion.div>
           </div>
           <p className="-mt-4 mb-2 text-center text-xs font-semibold text-muted-foreground md:hidden">
             Amsterdam · Connection
@@ -121,10 +127,10 @@ export default function ConnectionCard({ journey }) {
             <p className="mt-2 text-[11px] font-bold text-muted-foreground uppercase">Boarding</p>
             <SplitFlapText value={journey.nextFlight.boarding} className="mt-0.5 text-sm font-bold" />
           </div>
-          <div className="rounded-2xl bg-[#FDF2D8] p-3.5">
-            <TriangleAlert className="size-4.5 text-[#8A5A05]" />
-            <p className="mt-2 text-[11px] font-bold text-[#8A5A05] uppercase">Gate closes</p>
-            <SplitFlapText value={journey.boardingDeadline} className="mt-0.5 text-sm font-bold text-[#8A5A05]" />
+          <div className="rounded-2xl border border-warning/20 bg-warning-light p-3.5">
+            <TriangleAlert className="size-4.5 text-warning-dark" />
+            <p className="mt-2 text-[11px] font-bold text-warning-dark uppercase">Gate closes</p>
+            <SplitFlapText value={journey.boardingDeadline} className="mt-0.5 text-sm font-bold text-warning-dark" />
           </div>
         </div>
 

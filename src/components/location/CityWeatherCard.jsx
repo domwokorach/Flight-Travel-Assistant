@@ -28,12 +28,12 @@ export default function CityWeatherCard({ cities, selected, onSelect }) {
 
       <div className="mt-6 grid grid-cols-2 gap-3 *:min-w-0">
         <LocalTimeCard offsetHours={city.offsetHours} offsetLabel={city.offset} />
-        <div className="rounded-2xl bg-primary-light p-4">
-          <div className="flex items-center gap-1.5 text-primary-dark">
+        <div className="rounded-2xl border border-primary/20 bg-primary/12 p-4">
+          <div className="flex items-center gap-1.5 text-primary-light">
             <Cloud className="size-4" />
             <p className="text-[11px] font-bold uppercase">Weather</p>
           </div>
-          <p className="mt-1 text-2xl font-extrabold">{city.temp}°C</p>
+          <p className="mt-1 text-2xl font-extrabold text-foreground">{city.temp}°C</p>
           <p className="mt-0.5 text-xs font-semibold text-muted-foreground">{city.condition}</p>
         </div>
       </div>

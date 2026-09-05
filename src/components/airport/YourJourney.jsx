@@ -11,7 +11,7 @@ export default function YourJourney() {
           <p className="text-[11px] font-bold text-muted-foreground">Your journey</p>
           <p className="mt-1 text-lg font-extrabold">Check-in to take-off</p>
         </div>
-        <Badge className="bg-primary-light text-primary-dark">Boarding</Badge>
+        <Badge className="bg-primary/15 text-primary-light">Boarding</Badge>
       </div>
       <JourneyTimeline stages={['Check-in', 'Security', 'Gate', 'Boarding', 'Flight']} currentIndex={3} />
     </Card>

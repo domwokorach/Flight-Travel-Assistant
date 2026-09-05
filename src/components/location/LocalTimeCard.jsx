@@ -5,7 +5,7 @@ import { useLocalTime } from '@/hooks/useLocalTime'
 export default function LocalTimeCard({ offsetHours, offsetLabel }) {
   const time = useLocalTime(offsetHours)
   return (
-    <div className="rounded-2xl bg-foreground p-4 text-paper">
+    <div className="rounded-2xl bg-board-bg p-4 text-board-text">
       <div className="flex items-center gap-1.5 opacity-70">
         <Clock className="size-4" />
         <p className="text-[11px] font-bold tracking-[0.06em] uppercase">Local time</p>

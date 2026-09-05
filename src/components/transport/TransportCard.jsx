@@ -12,7 +12,7 @@ export default function TransportCard({ item }) {
     <Card className="p-5">
       <div className="flex items-start justify-between gap-4">
         <div className="flex gap-3">
-          <div className="grid size-11 shrink-0 place-items-center rounded-2xl bg-primary-light text-primary-dark">
+          <div className="grid size-11 shrink-0 place-items-center rounded-2xl bg-primary/15 text-primary-light">
             <Icon className="size-4.5" />
           </div>
           <div>
