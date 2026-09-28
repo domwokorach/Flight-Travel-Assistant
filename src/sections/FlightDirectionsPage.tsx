@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { SectionHeading } from '../components/common/SectionHeading'
 import FlightDirectionsHeader from '../components/directions/FlightDirectionsHeader'
-import LocationPermissionPrompt from '../components/directions/LocationPermissionPrompt'
+import JourneyPlannerForm from '../components/directions/JourneyPlannerForm'
 import JourneyTimeline from '../components/directions/JourneyTimeline'
 import FlightDirectionsMap from '../components/directions/FlightDirectionsMap'
 import DirectionsLoadingSkeleton from '../components/directions/DirectionsLoadingSkeleton'
@@ -96,7 +96,7 @@ export default function FlightDirectionsPage({ flight }: { flight: Flight | null
 
   const availableModes = useMemo<GoogleTravelMode[]>(() => {
     if (!origin || !departureAirport) return ['DRIVE', 'TRANSIT', 'WALK']
-    const km = haversineKm(origin, departureAirport)
+    const km = haversineKm(origin, { lat: departureAirport.latitude, lon: departureAirport.longitude })
     return km <= 5 ? ['DRIVE', 'TRANSIT', 'WALK'] : ['DRIVE', 'TRANSIT']
   }, [origin, departureAirport])
 
@@ -107,7 +107,11 @@ export default function FlightDirectionsPage({ flight }: { flight: Flight | null
 
   const handleOpenInGoogleMaps = () => {
     if (!origin || !departureAirport) return
-    window.open(buildGoogleMapsUrl(origin, departureAirport, mode), '_blank', 'noopener,noreferrer')
+    window.open(
+      buildGoogleMapsUrl(origin, { lat: departureAirport.latitude, lon: departureAirport.longitude }, mode),
+      '_blank',
+      'noopener,noreferrer'
+    )
   }
 
   const handleStartDirections = () => {
@@ -127,13 +131,17 @@ export default function FlightDirectionsPage({ flight }: { flight: Flight | null
         <FlightDirectionsHeader flight={flight} />
 
         {!origin && (
-          <LocationPermissionPrompt
-            status={geo.status}
-            onUseLocation={geo.request}
+          <JourneyPlannerForm
+            destinationLabel={departureAirport.name}
             address={address}
             onAddressChange={setAddress}
-            onAddressSubmit={handleAddressSubmit}
+            onSubmit={handleAddressSubmit}
             addressStatus={addressStatus}
+            geoStatus={geo.status}
+            onUseLocation={geo.request}
+            mode={mode}
+            onModeChange={setMode}
+            availableModes={availableModes}
           />
         )}
 
@@ -162,7 +170,9 @@ export default function FlightDirectionsPage({ flight }: { flight: Flight | null
               arrivalAirport={arrivalAirport}
               origin={origin}
               groundRoute={groundRoute}
-              directionsUrl={origin ? buildGoogleMapsUrl(origin, departureAirport, mode) : null}
+              directionsUrl={
+                origin ? buildGoogleMapsUrl(origin, { lat: departureAirport.latitude, lon: departureAirport.longitude }, mode) : null
+              }
             />
           </>
         )}

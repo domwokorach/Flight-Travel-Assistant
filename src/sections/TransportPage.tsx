@@ -1,5 +1,4 @@
 import React from 'react'
-import DirectionsPanel from '../components/transport/DirectionsPanel'
 import TransportCard from '../components/transport/TransportCard'
 import { SectionHeading } from '../components/common/SectionHeading'
 import { LiveIndicator } from '../components/common/LiveIndicator'
@@ -13,7 +12,6 @@ export default function TransportPage() {
   return (
     <section id="transport" className="scroll-mt-24 pt-10">
       <SectionHeading eyebrow="Transport & directions" title="Airport transfers without the guesswork" />
-      <DirectionsPanel />
       <div className="mt-7 grid gap-8 xl:grid-cols-2">
         <div>
           <div className="mb-4 flex items-center justify-between gap-3">

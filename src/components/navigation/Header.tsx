@@ -8,6 +8,7 @@ import ThemeToggle from './ThemeToggle'
 
 const nav: NavItem[] = [
   ['Flights', '#flights'],
+  ['Directions', '#directions'],
   ['At the Airport', '#airport'],
   ['Transport & Directions', '#transport'],
 ]

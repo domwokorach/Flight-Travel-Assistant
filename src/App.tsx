@@ -55,6 +55,7 @@ export default function App() {
       <Header onOpenCommandMenu={() => setCommandOpen(true)} />
       <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
         <FlightsPage countdown={countdown} />
+        <FlightDirectionsPage flight={flight} />
         <AirportPage />
         <TransportPage />
         <footer className="mt-16 border-t border-border py-8 text-center">
