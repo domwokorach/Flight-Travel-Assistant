@@ -2,6 +2,7 @@ import React from 'react'
 import { Plane, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import SplitFlapTitle from '@/components/board/SplitFlapTitle'
 import MobileNavigation, { type NavItem } from './MobileNavigation'
 import ThemeToggle from './ThemeToggle'
 
@@ -19,14 +20,21 @@ export default function Header({ onOpenCommandMenu }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-border-muted bg-background/90 text-foreground backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1280px] items-center px-4 sm:px-6">
-        <a href="#top" aria-label="FlightPath home" className="flex flex-grow items-center gap-3 text-inherit no-underline">
+        <a href="#top" aria-label="Travel Assistant home" className="flex flex-grow items-center gap-3 text-inherit no-underline">
           <div className="grid size-10 shrink-0 place-items-center rounded-2xl bg-primary">
             <Plane className="size-5 -rotate-12 text-primary-foreground" />
           </div>
-          <div>
-            <p className="font-heading text-sm font-extrabold">FlightPath</p>
-            <p className="text-[10px] font-bold tracking-[0.15em] text-muted-foreground uppercase">Travel assistant</p>
-          </div>
+          <SplitFlapTitle
+            lines={['TRAVEL ASSISTANT']}
+            className="hidden gap-0 sm:flex"
+            cellClassName="h-6 w-[15px] text-[13px] md:h-7 md:w-[17px] md:text-[15px]"
+          />
+          <SplitFlapTitle
+            lines={['TRAVEL', 'ASSISTANT']}
+            className="gap-[2px] sm:hidden"
+            rowClassName="gap-[2px]"
+            cellClassName="h-3.5 w-[9px] text-[9px]"
+          />
         </a>
 
         <nav aria-label="Primary navigation" className="hidden items-center gap-1 md:flex">

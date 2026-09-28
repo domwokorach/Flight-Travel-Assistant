@@ -1,23 +1,24 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
 import SplitFlapText from './SplitFlapText'
+import SplitFlapTextFlip from './SplitFlapTextFlip'
 import type { LegacyFlight } from '@/lib/adapters/legacyFlight'
 import type { FlightStatus } from '@/types/flight'
 
 const statusTone: Record<FlightStatus, string> = {
-  scheduled: '#94A3B8',
-  on_time: '#4ADE80',
-  boarding: '#38BDF8',
-  gate_open: '#22D3EE',
-  gate_closing: '#FB923C',
-  delayed: '#FBBF24',
-  departed: '#818CF8',
-  in_air: '#818CF8',
-  landed: '#4ADE80',
-  arrived: '#4ADE80',
-  cancelled: '#FB7185',
-  diverted: '#A78BFA',
-  unknown: '#94A3B8',
+  scheduled: '#A3A3A3',
+  on_time: '#34D399',
+  boarding: '#60A5FA',
+  gate_open: '#60A5FA',
+  gate_closing: '#F5A623',
+  delayed: '#FB923C',
+  departed: '#D4D4D4',
+  in_air: '#D4D4D4',
+  landed: '#34D399',
+  arrived: '#34D399',
+  cancelled: '#EF4444',
+  diverted: '#F5A623',
+  unknown: '#A3A3A3',
 }
 
 interface BoardRowData {
@@ -60,21 +61,25 @@ const rowGrid = 'grid grid-cols-[64px_84px_1fr_56px_1fr] md:grid-cols-[72px_92px
 function BoardRow({ row }: { row: BoardRowData }) {
   return (
     <div className={cn(rowGrid, 'border-b border-white/10 px-4 py-3 last-of-type:border-b-0 md:px-6')}>
-      <SplitFlapText value={row.time} className="text-base text-board-text md:text-lg" />
+      <SplitFlapTextFlip value={row.time} className="text-base md:text-lg" charClassName="h-6 w-[13px] text-[13px] md:h-7 md:w-[15px] md:text-[15px]" />
       <div>
-        <SplitFlapText value={row.flightNumber} className="text-sm text-board-text md:text-base" />
+        <SplitFlapTextFlip
+          value={row.flightNumber}
+          className="text-sm md:text-base"
+          charClassName="h-5 w-[11px] text-[11px] md:h-6 md:w-[13px] md:text-[13px]"
+        />
         <p className="mt-0.5 truncate text-[10px] font-medium text-board-muted">{row.airline}</p>
       </div>
       <div className="min-w-0">
         <div className="flex items-baseline gap-2">
-          <SplitFlapText value={row.code} className="text-base text-board-text md:text-lg" />
-          {row.estimated ? <span className="font-mono text-xs text-[#FBBF24]">→ {row.estimated}</span> : null}
+          <SplitFlapTextFlip value={row.code} className="text-base md:text-lg" charClassName="h-6 w-[13px] text-[13px] md:h-7 md:w-[15px] md:text-[15px]" />
+          {row.estimated ? <span className="font-mono text-xs text-[#FB923C]">→ {row.estimated}</span> : null}
         </div>
         <p className="mt-0.5 truncate text-[10px] font-medium text-board-muted">
           {row.city} · T{row.terminal}
         </p>
       </div>
-      <SplitFlapText value={row.gate} className="text-base text-board-text md:text-lg" />
+      <SplitFlapTextFlip value={row.gate} className="text-base md:text-lg" charClassName="h-6 w-[13px] text-[13px] md:h-7 md:w-[15px] md:text-[15px]" />
       <SplitFlapText value={row.statusLabel} className="text-xs md:text-sm" charClassName="" style={{ color: statusTone[row.status] }} />
     </div>
   )
