@@ -1,12 +1,17 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { MapPinned } from 'lucide-react'
-import 'mapbox-gl/dist/mapbox-gl.css'
+import 'maplibre-gl/dist/maplibre-gl.css'
 import { Card } from '@/components/ui/card'
 import { publicEnv } from '@/config/env'
+import { useMapLibreMap } from '@/hooks/useMapLibreMap'
 import type { AirportMeta } from '@/types/airport'
 import type { TransportOption } from '@/types/transport'
+
+// OpenFreeMap's "liberty" style — free, no API key, no request limits.
+// https://openfreemap.org
+const DEFAULT_MAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty'
 
 interface AirportMapProps {
   airport: AirportMeta
@@ -23,59 +28,32 @@ interface AirportMapProps {
  * any ground-transport stops we have coordinates for, and a directions deep link. There's no
  * free/available data source for indoor terminal/gate/lounge/shop layouts, so those aren't
  * fabricated here — see AirportInfo's terminal/facilities accordion for that content instead.
+ *
+ * Renders on MapLibre GL + OpenFreeMap vector tiles — no API key required. (Directions and
+ * geocoding still use Mapbox's APIs elsewhere, since OpenFreeMap is tiles-only.)
  */
 export default function AirportMap({ airport, transportStops = [], directionsUrl }: AirportMapProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [loadError, setLoadError] = useState(false)
-  const token = publicEnv.NEXT_PUBLIC_MAPBOX_TOKEN
+  const styleUrl = publicEnv.NEXT_PUBLIC_MAP_STYLE_URL ?? DEFAULT_MAP_STYLE_URL
 
-  useEffect(() => {
-    if (!token || !containerRef.current) return
-    let map: import('mapbox-gl').Map | undefined
-    let cancelled = false
+  const { loadError } = useMapLibreMap(containerRef, {
+    styleUrl,
+    center: [airport.longitude, airport.latitude],
+    onReady: (map, { Marker, Popup }) => {
+      new Marker({ color: '#2563eb' })
+        .setLngLat([airport.longitude, airport.latitude])
+        .setPopup(new Popup().setText(`${airport.name} (${airport.iata})`))
+        .addTo(map)
 
-    import('mapbox-gl')
-      .then((mapboxgl) => {
-        if (cancelled || !containerRef.current) return
-        mapboxgl.default.accessToken = token
-        map = new mapboxgl.default.Map({
-          container: containerRef.current,
-          style: 'mapbox://styles/mapbox/light-v11',
-          center: [airport.longitude, airport.latitude],
-          zoom: 13,
-        })
-        map.addControl(new mapboxgl.default.NavigationControl(), 'top-right')
-
-        new mapboxgl.default.Marker({ color: '#2563eb' })
-          .setLngLat([airport.longitude, airport.latitude])
-          .setPopup(new mapboxgl.default.Popup().setText(`${airport.name} (${airport.iata})`))
+      for (const stop of transportStops) {
+        if (stop.latitude == null || stop.longitude == null) continue
+        new Marker({ color: '#16a34a' })
+          .setLngLat([stop.longitude, stop.latitude])
+          .setPopup(new Popup().setText(stop.mode))
           .addTo(map)
-
-        for (const stop of transportStops) {
-          if (stop.latitude == null || stop.longitude == null) continue
-          new mapboxgl.default.Marker({ color: '#16a34a' })
-            .setLngLat([stop.longitude, stop.latitude])
-            .setPopup(new mapboxgl.default.Popup().setText(stop.mode))
-            .addTo(map)
-        }
-      })
-      .catch(() => setLoadError(true))
-
-    return () => {
-      cancelled = true
-      map?.remove()
-    }
-  }, [token, airport, transportStops])
-
-  if (!token) {
-    return (
-      <Card className="flex flex-col items-center justify-center gap-2 p-8 text-center">
-        <MapPinned className="size-6 text-muted-foreground" />
-        <p className="text-sm font-semibold">Map not yet available</p>
-        <p className="text-xs text-muted-foreground">Add a Mapbox token to enable the interactive airport map.</p>
-      </Card>
-    )
-  }
+      }
+    },
+  })
 
   if (loadError) {
     return (

@@ -54,5 +54,6 @@ export function computeConnectionJourney(arrivalLeg: Flight, departureLeg: Fligh
     statusText: urgencyLabel(urgency, effectiveConnectionMinutes),
     terminalChanged,
     gateChanged: false,
+    source: 'derived',
   }
 }

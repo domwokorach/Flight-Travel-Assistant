@@ -16,3 +16,17 @@ export interface AirportService {
   detail: string
   icon: string
 }
+
+/** A single autocomplete result from AirLabs' /suggest — airport, city, or airline. */
+export interface AirportSuggestion {
+  kind: 'airport' | 'city' | 'airline'
+  iata: string | null
+  icao: string | null
+  name: string
+  city: string | null
+  country: string | null
+}
+
+export interface NearbyAirport extends AirportMeta {
+  distanceKm: number
+}

@@ -1,10 +1,11 @@
 import type { Flight } from '@/types/flight'
 import { fetchJson, ProviderError } from '@/lib/http'
 import { withServerCache } from '@/lib/serverCache'
+import { serverEnv } from '@/config/env'
 import type { FlightProvider } from './types'
 import { normalizeAeroDataBoxFlight, type AeroDataBoxFlight } from './aerodatabox.normalize'
 
-const BASE_URL = 'https://aerodatabox.p.rapidapi.com'
+const BASE_URL = serverEnv.AERODATABOX_BASE_URL ?? 'https://aerodatabox.p.rapidapi.com'
 
 interface FidsResponse {
   departures?: AeroDataBoxFlight[]

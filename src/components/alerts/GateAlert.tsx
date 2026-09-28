@@ -1,7 +1,6 @@
 import React from 'react'
 import { motion } from 'motion/react'
-import { TriangleAlert, Navigation, MapPin, Clock } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { Navigation, MapPin, Clock } from 'lucide-react'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
@@ -13,13 +12,6 @@ import type { Flight } from '@/types/flight'
 
 type GateCountdown = ReturnType<typeof useLiveGateCountdown>
 
-const toneClasses: Record<GateCountdown['tone'], string> = {
-  slate: 'bg-accent text-foreground',
-  sky: 'bg-primary text-primary-foreground',
-  orange: 'bg-warning text-background',
-  rose: 'bg-error text-white',
-}
-
 interface GateAlertBodyProps {
   countdown: GateCountdown
   onDismiss: () => void
@@ -28,7 +20,6 @@ interface GateAlertBodyProps {
 
 function GateAlertBody({ countdown, onDismiss, flight }: GateAlertBodyProps) {
   const { minutes, formatted, label, message, tone } = countdown
-  const tones = toneClasses[tone] || toneClasses.slate
   const isUrgent = tone === 'orange' || tone === 'rose'
   const airline = flight?.airline?.name ?? 'British Airways'
   const flightNumber = flight?.flightNumber ?? 'BA117'
@@ -43,12 +34,6 @@ function GateAlertBody({ countdown, onDismiss, flight }: GateAlertBodyProps) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.22, ease: 'easeOut' }}
     >
-      <div className={cn('-mx-1 -mt-1 rounded-t-2xl px-4 py-3', tones)}>
-        <div className="flex items-center gap-2">
-          <TriangleAlert className="size-4.5" />
-          <p className="text-[13px] font-extrabold tracking-[0.06em] uppercase">Urgent travel alert</p>
-        </div>
-      </div>
       <div className="px-4 pt-5 pb-1">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3">

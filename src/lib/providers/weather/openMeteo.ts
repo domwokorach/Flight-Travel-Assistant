@@ -2,7 +2,10 @@ import type { WeatherSnapshot } from '@/types/weather'
 import { fetchJson } from '@/lib/http'
 import { withServerCache } from '@/lib/serverCache'
 import { formatLocalTime } from '@/lib/timezone'
+import { serverEnv } from '@/config/env'
 import type { WeatherProvider } from './types'
+
+const BASE_URL = serverEnv.WEATHER_BASE_URL ?? 'https://api.open-meteo.com/v1'
 
 interface OpenMeteoResponse {
   current?: {
@@ -43,7 +46,7 @@ export class OpenMeteoProvider implements WeatherProvider {
   ): Promise<WeatherSnapshot> {
     const cacheKey = `weather:${latitude.toFixed(2)}:${longitude.toFixed(2)}`
     const data = await withServerCache(cacheKey, 10 * 60_000, async () => {
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=${encodeURIComponent(timezone)}&forecast_days=1`
+      const url = `${BASE_URL}/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=${encodeURIComponent(timezone)}&forecast_days=1`
       return fetchJson<OpenMeteoResponse>(url, { revalidate: 600, timeoutMs: 7000 })
     })
 

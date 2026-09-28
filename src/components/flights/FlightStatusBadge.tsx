@@ -5,19 +5,22 @@ import { cn } from '@/lib/utils'
 import type { FlightStatus } from '@/types/flight'
 import type { ComponentType } from 'react'
 
+// Monochrome by default. Colour is reserved for states with real operational meaning:
+// green = on time / arrived, blue = boarding / active, amber = gate closing / attention,
+// orange = delay, red = cancellation.
 const styles: Record<FlightStatus, { bg: string; fg: string; icon: ComponentType<{ className?: string }> }> = {
   scheduled: { bg: 'bg-accent', fg: 'text-muted-foreground', icon: Clock },
-  on_time: { bg: 'bg-emerald-400/10', fg: 'text-emerald-300', icon: CircleCheck },
-  gate_open: { bg: 'bg-cyan-400/10', fg: 'text-cyan-300', icon: DoorOpen },
-  boarding: { bg: 'bg-primary/15', fg: 'text-primary-light', icon: PlaneTakeoff },
+  on_time: { bg: 'bg-success-light', fg: 'text-success-dark', icon: CircleCheck },
+  gate_open: { bg: 'bg-info-light', fg: 'text-info-dark', icon: DoorOpen },
+  boarding: { bg: 'bg-info-light', fg: 'text-info-dark', icon: PlaneTakeoff },
   gate_closing: { bg: 'bg-warning-light', fg: 'text-warning-dark', icon: Timer },
-  delayed: { bg: 'bg-orange-400/10', fg: 'text-orange-300', icon: ClockAlert },
-  departed: { bg: 'bg-indigo-400/10', fg: 'text-indigo-300', icon: PlaneTakeoff },
-  in_air: { bg: 'bg-indigo-400/10', fg: 'text-indigo-300', icon: Navigation2 },
-  landed: { bg: 'bg-emerald-400/10', fg: 'text-emerald-300', icon: PlaneLanding },
-  arrived: { bg: 'bg-emerald-400/10', fg: 'text-emerald-300', icon: PlaneLanding },
+  delayed: { bg: 'bg-delay-light', fg: 'text-delay-dark', icon: ClockAlert },
+  departed: { bg: 'bg-accent', fg: 'text-foreground', icon: PlaneTakeoff },
+  in_air: { bg: 'bg-accent', fg: 'text-foreground', icon: Navigation2 },
+  landed: { bg: 'bg-success-light', fg: 'text-success-dark', icon: PlaneLanding },
+  arrived: { bg: 'bg-success-light', fg: 'text-success-dark', icon: PlaneLanding },
   cancelled: { bg: 'bg-error-light', fg: 'text-error-dark', icon: CircleX },
-  diverted: { bg: 'bg-violet-400/10', fg: 'text-violet-300', icon: Navigation2 },
+  diverted: { bg: 'bg-warning-light', fg: 'text-warning-dark', icon: Navigation2 },
   unknown: { bg: 'bg-accent', fg: 'text-muted-foreground', icon: CircleHelp },
 }
 

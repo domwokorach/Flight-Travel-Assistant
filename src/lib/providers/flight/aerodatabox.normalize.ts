@@ -1,5 +1,6 @@
 import type { AirportRef, Flight, FlightDirection, FlightStatus, TimePoint } from '@/types/flight'
 import { computeDelayMinutes } from '@/lib/flightMath'
+import { getAirlineDomain } from '@/data/airlines'
 
 // Minimal shape of the fields we actually read from AeroDataBox's flight objects.
 // The provider returns more fields than this; everything else is ignored.
@@ -138,6 +139,7 @@ export function normalizeAeroDataBoxFlight(raw: AeroDataBoxFlight, direction: Fl
       name: raw.airline?.name ?? (flightNumber.replace(/[0-9]/g, '').trim() || 'Unknown Airline'),
       iata: raw.airline?.iata ?? null,
       icao: raw.airline?.icao ?? null,
+      domain: getAirlineDomain(raw.airline?.iata ?? undefined) ?? null,
     },
     aircraft: raw.aircraft?.model ?? null,
     origin: toAirportRef(dep?.airport, dep),

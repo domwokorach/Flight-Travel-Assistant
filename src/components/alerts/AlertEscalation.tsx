@@ -9,11 +9,11 @@ interface AlertEscalationProps {
 }
 
 const stages = [
-  { time: '30 min', label: 'Gate announced', dot: '#4B5B72', min: 20 },
-  { time: '20 min', label: 'Boarding', dot: '#4F8CFF', min: 15 },
+  { time: '30 min', label: 'Gate announced', dot: '#737373', min: 20 },
+  { time: '20 min', label: 'Boarding', dot: '#60A5FA', min: 15 },
   { time: '15 min', label: 'Gate closing soon', dot: '#F5A623', min: 5 },
   { time: '5 min', label: 'Proceed immediately', dot: '#EF4444', min: 0 },
-  { time: '0 min', label: 'Gate closed', dot: '#F7F9FC', min: -1 },
+  { time: '0 min', label: 'Gate closed', dot: '#FAFAFA', min: -1 },
 ]
 
 export default function AlertEscalation({ countdown }: AlertEscalationProps) {

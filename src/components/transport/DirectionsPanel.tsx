@@ -143,10 +143,10 @@ export default function DirectionsPanel({ airport = 'LHR' }: DirectionsPanelProp
             </p>
           )}
         </div>
-        <div className="relative min-h-44 border-t border-white/10 bg-[radial-gradient(circle_at_20%_30%,rgba(79,140,255,.22),transparent_32%),radial-gradient(circle_at_75%_70%,rgba(79,140,255,.16),transparent_35%)] lg:border-t-0 lg:border-l">
+        <div className="relative min-h-44 border-t border-white/10 bg-[radial-gradient(circle_at_20%_30%,rgba(255,255,255,.10),transparent_32%),radial-gradient(circle_at_75%_70%,rgba(255,255,255,.06),transparent_35%)] lg:border-t-0 lg:border-l">
           <div className="absolute inset-6 rounded-3xl border border-white/10">
-            <div className="absolute top-[62%] left-[18%] size-3 rounded-full bg-foreground shadow-[0_0_0_8px_rgba(79,140,255,0.18)]" />
-            <div className="absolute top-[28%] right-[18%] size-3 rounded-full bg-primary-light shadow-[0_0_0_8px_rgba(79,140,255,0.18)]" />
+            <div className="absolute top-[62%] left-[18%] size-3 rounded-full bg-foreground shadow-[0_0_0_8px_rgba(255,255,255,0.14)]" />
+            <div className="absolute top-[28%] right-[18%] size-3 rounded-full bg-foreground/70 shadow-[0_0_0_8px_rgba(255,255,255,0.14)]" />
           </div>
         </div>
       </div>

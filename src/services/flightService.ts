@@ -32,6 +32,14 @@ export async function getConnectionJourney(
   walkMinutes = 20
 ): Promise<{ journey: ConnectionJourney | null; isLive: boolean }> {
   const provider = getFlightProvider()
+
+  // Prefer a provider's native connection lookup (e.g. Cirium) when available; AeroDataBox and
+  // FlightAware don't implement one, so fall back to composing two getFlight() calls.
+  if (provider.getConnection) {
+    const journey = await provider.getConnection(arrivalFlightNumber, departureFlightNumber, walkMinutes)
+    return { journey, isLive: provider.isLive }
+  }
+
   const [arrivalLeg, departureLeg] = await Promise.all([
     provider.getFlight(arrivalFlightNumber),
     provider.getFlight(departureFlightNumber),

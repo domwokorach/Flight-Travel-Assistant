@@ -1,5 +1,5 @@
 import React from 'react'
-import { MoreVertical, CalendarPlus, Navigation, Share2, PlaneTakeoff, DoorOpen, MapPin, Clock, ChevronDown } from 'lucide-react'
+import { MoreVertical, CalendarPlus, Navigation, Share2, PlaneTakeoff, DoorOpen, MapPin, Clock, ChevronDown, Gauge, TrendingUp } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,6 +13,7 @@ import AirlineLogo from './AirlineLogo'
 import SplitFlapText from '../board/SplitFlapText'
 import { cn } from '@/lib/utils'
 import { useSnackbar } from '@/lib/snackbar'
+import { useLiveFlightPosition } from '@/hooks/useFlights'
 import type { LegacyFlight } from '@/lib/adapters/legacyFlight'
 
 interface TimePairProps {
@@ -49,6 +50,7 @@ type FlightCardAction = 'calendar' | 'directions' | 'share'
 export default function FlightCard({ flight, featured = false }: FlightCardProps) {
   const { notify } = useSnackbar()
   const [detailsOpen, setDetailsOpen] = React.useState(false)
+  const { position: livePosition } = useLiveFlightPosition(flight.flightNumber, flight.status === 'in_air')
 
   const handleAction = (action: FlightCardAction) => {
     if (action === 'calendar') notify(`${flight.flightNumber} added to calendar`, { severity: 'success' })
@@ -117,6 +119,21 @@ export default function FlightCard({ flight, featured = false }: FlightCardProps
             </div>
           </div>
         </div>
+
+        {flight.status === 'in_air' && livePosition && (
+          <div className="mt-4 flex items-center gap-4 rounded-2xl bg-accent px-4 py-3 text-xs font-bold text-muted-foreground">
+            {livePosition.speed != null && (
+              <span className="inline-flex items-center gap-1.5">
+                <Gauge className="size-3.5" /> {Math.round(livePosition.speed)} km/h
+              </span>
+            )}
+            {livePosition.altitude != null && (
+              <span className="inline-flex items-center gap-1.5">
+                <TrendingUp className="size-3.5" /> {Math.round(livePosition.altitude).toLocaleString()} m
+              </span>
+            )}
+          </div>
+        )}
 
         {flight.status === 'cancelled' ? (
           <div className="mt-6 rounded-2xl border border-error/20 bg-error-light p-4 text-error-dark">

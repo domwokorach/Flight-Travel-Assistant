@@ -3,6 +3,7 @@
 import { useCallback, useState } from 'react'
 import { useLivePolling } from './useLivePolling'
 import type { ConnectionJourney, Flight } from '@/types/flight'
+import type { LiveFlightPosition } from '@/types/liveFlight'
 import { minutesUntil } from '@/lib/flightMath'
 
 interface BoardResponse {
@@ -60,6 +61,19 @@ export function useFlightTracking(flightNumber: string | null, enabled = true) {
   })
 
   return { flight: data?.flight ?? null, isLive: data?.isLive ?? false, ...rest }
+}
+
+/** Live position (lat/lon/altitude/speed) for an in-air flight — only enable while
+ *  `status === 'in_air'`; there's nothing to poll before takeoff or after landing. */
+export function useLiveFlightPosition(flightNumber: string | null, enabled: boolean) {
+  const fetcher = useCallback(async () => {
+    const res = await fetch(`/api/flights/live?flight_iata=${encodeURIComponent(flightNumber ?? '')}`)
+    if (!res.ok) throw new Error('Live position unavailable')
+    return res.json() as Promise<{ position: LiveFlightPosition | null }>
+  }, [flightNumber])
+
+  const { data, ...rest } = useLivePolling(fetcher, { intervalMs: 30_000, enabled: Boolean(flightNumber) && enabled, staleAfterMs: 90_000 })
+  return { position: data?.position ?? null, ...rest }
 }
 
 export function useConnectionJourney(arrivalFlightNumber: string, departureFlightNumber: string, intervalMs = 30_000) {

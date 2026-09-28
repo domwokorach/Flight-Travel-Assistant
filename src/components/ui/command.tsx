@@ -19,18 +19,26 @@ function CommandDialog({
   description = 'Search flights, sections and actions',
   children,
   className,
+  shouldFilter,
   ...props
 }: React.ComponentProps<typeof Dialog> & {
   title?: string
   description?: string
   className?: string
+  /** Set false when the list is already server-filtered (e.g. live search results) —
+   *  otherwise cmdk's built-in fuzzy filter re-filters against each item's `value` and can
+   *  hide results it can't fuzzy-match. */
+  shouldFilter?: boolean
 }) {
   return (
     <Dialog {...props}>
       <DialogContent showCloseButton={false} className={cn('max-w-xl overflow-hidden p-0', className)}>
         <DialogTitle className="sr-only">{title}</DialogTitle>
         <DialogDescription className="sr-only">{description}</DialogDescription>
-        <Command className="[&_[cmdk-group-heading]]:px-2.5 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-bold [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wide [&_[cmdk-group-heading]]:text-muted-foreground">
+        <Command
+          shouldFilter={shouldFilter}
+          className="[&_[cmdk-group-heading]]:px-2.5 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-bold [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wide [&_[cmdk-group-heading]]:text-muted-foreground"
+        >
           {children}
         </Command>
       </DialogContent>

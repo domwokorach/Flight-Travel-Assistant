@@ -5,9 +5,9 @@ const CONFIG: Record<
   ConnectionState,
   { label: string; dotClassName: string; textClassName: string; solid: boolean }
 > = {
-  live: { label: 'Live', dotClassName: 'bg-emerald-500', textClassName: 'text-emerald-600 dark:text-emerald-400', solid: true },
-  reconnecting: { label: 'Reconnecting', dotClassName: 'bg-amber-500 animate-pulse', textClassName: 'text-amber-600 dark:text-amber-400', solid: true },
-  stale: { label: 'Delayed Data', dotClassName: 'bg-amber-500', textClassName: 'text-amber-600 dark:text-amber-400', solid: true },
+  live: { label: 'Live', dotClassName: 'bg-success', textClassName: 'text-success-dark', solid: true },
+  reconnecting: { label: 'Reconnecting', dotClassName: 'bg-warning animate-pulse', textClassName: 'text-warning-dark', solid: true },
+  stale: { label: 'Delayed Data', dotClassName: 'bg-warning', textClassName: 'text-warning-dark', solid: true },
   offline: { label: 'Offline', dotClassName: 'bg-muted-foreground/50', textClassName: 'text-muted-foreground', solid: false },
 }
 

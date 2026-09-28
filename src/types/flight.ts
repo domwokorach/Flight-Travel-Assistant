@@ -42,6 +42,9 @@ export interface Flight {
     name: string
     iata?: string | null
     icao?: string | null
+    /** Verified marketing domain for Logo.dev's domain lookup (spec §18/§31) — populated by
+     *  the normalizer from src/data/airlines.js, not by any flight provider. */
+    domain?: string | null
   }
   aircraft?: string | null
   origin: AirportRef
@@ -90,4 +93,8 @@ export interface ConnectionJourney {
   statusText: string
   terminalChanged: boolean
   gateChanged: boolean
+  /** "derived" = composed client-side from two getFlight() legs (today's AeroDataBox path).
+   *  "provider" = returned directly by a provider's native connections API (e.g. a future
+   *  Cirium FlightProvider.getConnection()) — same shape, so the UI never has to branch on it. */
+  source: 'derived' | 'provider'
 }

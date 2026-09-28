@@ -4,95 +4,105 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Aviation daylight — light theme (default) */
-  --background: #F5F7FA;
-  --background-alt: #EEF2F7;
-  --surface-elevated: #FFFFFF;
+  /* Monochrome — light theme */
+  --background: #FFFFFF;
+  --background-alt: #FAFAFA;
+  --surface-elevated: #F5F5F5;
   --paper: #FFFFFF;
-  --surface-subtle: #E7ECF3;
+  --surface-subtle: #F5F5F5;
 
-  --primary: #2E6FE0;
-  --primary-light: #4F8CFF;
-  --primary-dark: #1F54B8;
+  --primary: #0A0A0A;
+  --primary-light: #262626;
+  --primary-dark: #262626;
   --primary-foreground: #FFFFFF;
 
-  --secondary: #E7ECF3;
-  --secondary-foreground: #12213A;
+  --secondary: #F5F5F5;
+  --secondary-foreground: #0A0A0A;
 
-  --success: #17A673;
-  --success-light: rgba(23, 166, 115, 0.12);
-  --success-dark: #0E7A54;
+  --success: #16A34A;
+  --success-light: rgba(22, 163, 74, 0.10);
+  --success-dark: #15803D;
 
-  --warning: #B4720A;
-  --warning-light: rgba(180, 114, 10, 0.12);
-  --warning-dark: #8A5807;
+  --info: #2563EB;
+  --info-light: rgba(37, 99, 235, 0.10);
+  --info-dark: #1D4ED8;
+
+  --warning: #B45309;
+  --warning-light: rgba(180, 83, 9, 0.10);
+  --warning-dark: #92400E;
+
+  --delay: #C2410C;
+  --delay-light: rgba(194, 65, 12, 0.10);
+  --delay-dark: #9A3412;
 
   --error: #DC2626;
   --error-light: rgba(220, 38, 38, 0.1);
   --error-dark: #B91C1C;
 
-  --info: #0891B2;
-  --info-light: rgba(8, 145, 178, 0.12);
-  --info-dark: #066A80;
+  --text-primary: #0A0A0A;
+  --text-secondary: #404040;
+  --text-tertiary: #737373;
+  --border: #E5E5E5;
+  --border-muted: rgba(0, 0, 0, 0.06);
+  --border-strong: rgba(0, 0, 0, 0.18);
+  --action-hover: rgba(0, 0, 0, 0.04);
 
-  --text-primary: #0E1A2B;
-  --text-secondary: #48566B;
-  --text-tertiary: #7A8AA0;
-  --border: #DCE3EC;
-  --border-muted: rgba(15, 23, 42, 0.08);
-  --action-hover: rgba(15, 23, 42, 0.05);
-
-  /* Departure board is a physical-hardware look — stays dark in both themes */
-  --board-bg: #060D17;
-  --board-alt: #0B131F;
+  /* Departure board is a physical-hardware look — stays black in both themes */
+  --board-bg: #050505;
+  --board-alt: #0A0A0A;
   --board-text: #F4F1E8;
-  --board-muted: #8190A5;
+  --board-muted: #8A8A8A;
 
-  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 8px 24px rgba(15, 23, 42, 0.08);
-  --shadow-popover: 0 20px 45px rgba(15, 23, 42, 0.16);
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 8px 24px rgba(0, 0, 0, 0.06);
+  --shadow-popover: 0 20px 45px rgba(0, 0, 0, 0.12);
 }
 
 .dark {
-  /* Dark aviation navy */
-  --background: #08111F;
-  --background-alt: #0D1726;
-  --surface-elevated: #111C2D;
-  --paper: #152235;
-  --surface-subtle: #19283D;
+  /* Monochrome — dark theme (default) */
+  --background: #050505;
+  --background-alt: #090909;
+  --surface-elevated: #151515;
+  --paper: #101010;
+  --surface-subtle: #151515;
 
-  --primary: #4F8CFF;
-  --primary-light: #7DB3FF;
-  --primary-dark: #3A6FDB;
-  --primary-foreground: #F7F9FC;
+  --primary: #FAFAFA;
+  --primary-light: #FFFFFF;
+  --primary-dark: #D4D4D4;
+  --primary-foreground: #0A0A0A;
 
-  --secondary: #19283D;
-  --secondary-foreground: #F7F9FC;
+  --secondary: #151515;
+  --secondary-foreground: #FAFAFA;
 
   --success: #34D399;
   --success-light: rgba(52, 211, 153, 0.12);
-  --success-dark: #7EEBC3;
+  --success-dark: #86EFAC;
+
+  --info: #60A5FA;
+  --info-light: rgba(96, 165, 250, 0.12);
+  --info-dark: #93C5FD;
 
   --warning: #F5A623;
   --warning-light: rgba(245, 166, 35, 0.12);
   --warning-dark: #FBC768;
 
+  --delay: #FB923C;
+  --delay-light: rgba(251, 146, 60, 0.12);
+  --delay-dark: #FDBA85;
+
   --error: #EF4444;
   --error-light: rgba(239, 68, 68, 0.14);
   --error-dark: #FCA5A5;
 
-  --info: #22D3EE;
-  --info-light: rgba(34, 211, 238, 0.12);
-  --info-dark: #7EE3F2;
+  --text-primary: #FAFAFA;
+  --text-secondary: #D4D4D4;
+  --text-tertiary: #A3A3A3;
+  --border: rgba(255, 255, 255, 0.10);
+  --border-muted: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --action-hover: #1A1A1A;
 
-  --text-primary: #F7F9FC;
-  --text-secondary: #B7C2D0;
-  --text-tertiary: #8190A5;
-  --border: #26364D;
-  --border-muted: rgba(255, 255, 255, 0.08);
-  --action-hover: rgba(255, 255, 255, 0.05);
-
-  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 8px 24px rgba(2, 6, 14, 0.35);
-  --shadow-popover: 0 20px 45px rgba(2, 6, 14, 0.55);
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-popover: 0 20px 45px rgba(0, 0, 0, 0.6);
 }
 
 :root {
@@ -145,6 +155,10 @@
   --color-warning-light: var(--warning-light);
   --color-warning-dark: var(--warning-dark);
 
+  --color-delay: var(--delay);
+  --color-delay-light: var(--delay-light);
+  --color-delay-dark: var(--delay-dark);
+
   --color-error: var(--error);
   --color-error-light: var(--error-light);
   --color-error-dark: var(--error-dark);
@@ -158,6 +172,7 @@
   --color-text-tertiary: var(--text-tertiary);
   --color-border: var(--border);
   --color-border-muted: var(--border-muted);
+  --color-border-strong: var(--border-strong);
   --color-action-hover: var(--action-hover);
 
   --color-board-bg: var(--board-bg);
@@ -257,8 +272,8 @@ textarea {
 }
 
 @keyframes journey-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(79, 140, 255, 0.35); }
-  100% { box-shadow: 0 0 0 8px rgba(79, 140, 255, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.35); }
+  100% { box-shadow: 0 0 0 8px rgba(96, 165, 250, 0); }
 }
 
 @keyframes status-pulse {

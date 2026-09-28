@@ -58,7 +58,7 @@ export default function FlightSearch({ onSearch, onClear, loading = false, isLiv
 
   return (
     <Card className="relative overflow-hidden p-5 sm:p-6">
-      <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#4F8CFF,#7DB3FF,#4F8CFF)]" />
+      <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,transparent,var(--text-tertiary),transparent)] opacity-40" />
       <form onSubmit={submit}>
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div>
