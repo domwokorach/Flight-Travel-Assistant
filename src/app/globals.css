@@ -299,3 +299,100 @@ textarea {
     scroll-behavior: auto !important;
   }
 }
+
+/*
+ * Scoped design tokens for the Heathrow-style live flight section
+ * (src/components/flights/heathrow/**). Overriding the same semantic
+ * custom-property names the app's shadcn/ui primitives already read
+ * (--primary, --card, --border, etc.) re-themes anything nested inside
+ * an `.hrw` wrapper to a clean white/purple aviation look, in both the
+ * light and dark app themes, without touching the global dark
+ * split-flap-board tokens used by the rest of the app.
+ */
+.hrw {
+  color-scheme: light;
+
+  --background: #FFFFFF;
+  --background-alt: #FAF8FC;
+  --surface-elevated: #FFFFFF;
+  --paper: #FFFFFF;
+  --surface-subtle: #F5F2FA;
+
+  --primary: #4B1E7A;
+  --primary-light: #6A34A8;
+  --primary-dark: #35155A;
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #F5F2FA;
+  --secondary-foreground: #1C1230;
+
+  --success: #0F9D58;
+  --success-light: rgba(15, 157, 88, 0.10);
+  --success-dark: #0B7A44;
+
+  --info: #2563EB;
+  --info-light: rgba(37, 99, 235, 0.10);
+  --info-dark: #1D4ED8;
+
+  --warning: #B45309;
+  --warning-light: rgba(180, 83, 9, 0.10);
+  --warning-dark: #92400E;
+
+  --delay: #C2410C;
+  --delay-light: rgba(194, 65, 12, 0.10);
+  --delay-dark: #9A3412;
+
+  --error: #D6006F;
+  --error-light: rgba(214, 0, 111, 0.10);
+  --error-dark: #A30057;
+
+  --text-primary: #170B2B;
+  --text-secondary: #564C6B;
+  --text-tertiary: #8A8098;
+  --border: #E7E1F0;
+  --border-muted: rgba(75, 30, 122, 0.08);
+  --border-strong: rgba(75, 30, 122, 0.22);
+  --action-hover: #F5F2FA;
+
+  --board-bg: #170B2B;
+  --board-alt: #1F1038;
+  --board-text: #F4F1E8;
+  --board-muted: #A99BC2;
+
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 10px 28px rgba(75, 30, 122, 0.08);
+  --shadow-popover: 0 20px 45px rgba(75, 30, 122, 0.16);
+
+  --foreground: var(--text-primary);
+  --card: var(--paper);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface-elevated);
+  --popover-foreground: var(--text-primary);
+  --muted: var(--surface-subtle);
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--action-hover);
+  --accent-foreground: var(--text-primary);
+  --destructive: var(--error);
+  --destructive-foreground: #FFFFFF;
+  --input: var(--border);
+  --ring: var(--primary);
+
+  --radius: 1rem;
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 3px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Heathrow's signature magenta — reserved for the "Track Flight Live" accent and the
+     live/auto-refresh pulse, kept distinct from --primary purple so it reads as a highlight. */
+  --hrw-magenta: #C6007E;
+  --hrw-magenta-light: rgba(198, 0, 126, 0.10);
+  --hrw-magenta-dark: #99005F;
+
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+@keyframes hrw-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.85); }
+}

@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { ArrowRight, Pause, Play, Sun, Cloud, CloudRain, CloudLightning, CloudSnow, CloudFog, Wind } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -22,16 +23,22 @@ const SLIDES = [
     eyebrow: 'Live flight tracking',
     heading: 'Gate to gate, all in one place',
     body: 'Departures, arrivals, connections and gate alerts for your flight — updated in real time.',
+    image:
+      'https://res.cloudinary.com/dkkuwmr42/image/upload/v1790633368/Flight%20-%20Images/ChatGPT_Image_Sep_28_2026_11_07_40_PM_quknx9.png',
   },
   {
     eyebrow: 'Never miss a gate change',
     heading: 'Know exactly when to leave',
     body: 'Live gate countdowns and push alerts, so a closing gate or a delay never catches you out.',
+    image:
+      'https://res.cloudinary.com/dkkuwmr42/image/upload/v1790633380/Flight%20-%20Images/ChatGPT_Image_Sep_28_2026_11_09_30_PM_lygjcv.png',
   },
   {
     eyebrow: 'Door to gate',
     heading: 'One journey, start to finish',
     body: 'Traffic-aware directions to the airport, plus your flight and connection details in one timeline.',
+    image:
+      'https://res.cloudinary.com/dkkuwmr42/image/upload/v1790633368/Flight%20-%20Images/ChatGPT_Image_Sep_28_2026_11_05_57_PM_matkje.png',
   },
 ]
 
@@ -65,6 +72,19 @@ export default function Hero({ weather, isLive }: HeroProps) {
   return (
     <div className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-board-bg text-board-text">
       <div className="relative isolate px-4 pt-14 pb-24 sm:px-6 sm:pt-20 sm:pb-28">
+        <div aria-hidden className="absolute inset-0 -z-20">
+          {SLIDES.map((s, i) => (
+            <Image
+              key={s.image}
+              src={s.image}
+              alt=""
+              fill
+              priority={i === 0}
+              className={`object-cover transition-opacity duration-1000 ${i === index ? 'opacity-100' : 'opacity-0'}`}
+            />
+          ))}
+        </div>
+        <div aria-hidden className="absolute inset-0 -z-10 bg-board-bg/70" />
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_15%_20%,rgba(255,255,255,0.08),transparent_38%),radial-gradient(circle_at_85%_75%,rgba(255,255,255,0.06),transparent_42%)]"
